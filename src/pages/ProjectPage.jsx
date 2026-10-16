@@ -1,0 +1,120 @@
+import { useEffect } from 'react'
+import { Link, useParams } from 'react-router-dom'
+import { motion } from 'framer-motion'
+import { ArrowLeft, ArrowUpRight } from 'lucide-react'
+import { projects } from '../data/site'
+import { useGoToSection } from '../hooks/useGoToSection'
+import Cover from '../components/ui/Cover'
+import Reveal from '../components/ui/Reveal'
+import NotFound from './NotFound'
+
+const ease = [0.16, 1, 0.3, 1]
+
+/** Case study page: /work/:slug */
+export default function ProjectPage() {
+  const { slug } = useParams()
+  const goTo = useGoToSection()
+  const index = projects.findIndex((p) => p.slug === slug)
+  const project = projects[index]
+
+  useEffect(() => {
+    if (project) document.title = `${project.title} — Shubham Nagar`
+  }, [project])
+
+  if (!project) return <NotFound />
+
+  const next = projects[(index + 1) % projects.length]
+
+  const meta = [
+    { label: 'Client', value: project.client },
+    { label: 'Services', value: project.services.join(', ') },
+    { label: 'Year', value: project.year },
+    { label: 'Timeline', value: project.duration },
+  ]
+
+  const story = [
+    { label: 'The problem', text: project.challenge },
+    { label: 'What we did', text: project.approach },
+    { label: 'What changed', text: project.outcome },
+  ]
+
+  return (
+    <article className="px-5 pt-[112px] sm:px-8 md:pt-[136px]">
+      <div className="mx-auto max-w-[1320px]">
+        <a
+          href="/#work"
+          onClick={(e) => goTo('work', e)}
+          className="group inline-flex items-center gap-2 rounded-full text-ink-soft transition-colors hover:text-ink"
+        >
+          <ArrowLeft className="size-4 transition-transform group-hover:-translate-x-0.5" aria-hidden="true" />
+          All work
+        </a>
+
+        <header className="mt-10 grid gap-10 lg:grid-cols-12">
+          <div className="lg:col-span-8">
+            <p className="text-cobalt">{project.categoryLabel}</p>
+            <h1 className="display mt-3 text-[clamp(2.75rem,7vw,6rem)] leading-[0.95]">{project.title}</h1>
+            <p className="mt-6 max-w-2xl text-xl text-ink-soft md:text-2xl md:leading-snug">{project.summary}</p>
+          </div>
+          <dl className="grid grid-cols-2 gap-x-6 gap-y-5 self-end text-[0.95rem] lg:col-span-4 lg:grid-cols-1">
+            {meta.map((m) => (
+              <div key={m.label}>
+                <dt className="text-ink-soft">{m.label}</dt>
+                <dd className="mt-0.5">{m.value}</dd>
+              </div>
+            ))}
+          </dl>
+        </header>
+
+        <motion.div
+          className="mt-14 md:mt-20"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, ease, delay: 0.5 }}
+        >
+          <Cover src={project.cover} alt={`${project.title} project visual`} eager className="aspect-[4/3] rounded-[28px] md:aspect-[3/2]" />
+        </motion.div>
+
+        {/* Results */}
+        <ul className="mt-6 grid gap-3 sm:grid-cols-3">
+          {project.metrics.map((m) => (
+            <li key={m.label} className="rounded-[22px] bg-paper-2 px-6 py-7">
+              <span className="display block text-[2.75rem] leading-none text-cobalt">{m.value}</span>
+              <span className="mt-2 block text-ink-soft">{m.label}</span>
+            </li>
+          ))}
+        </ul>
+
+        {/* Story */}
+        <div className="mt-24 space-y-16 md:mt-32 md:space-y-20">
+          {story.map((s) => (
+            <Reveal key={s.label} className="grid gap-4 border-t border-line pt-8 md:grid-cols-12 md:gap-10">
+              <h2 className="font-display text-2xl font-semibold md:col-span-4">{s.label}</h2>
+              <p className="max-w-[62ch] text-xl leading-relaxed text-ink-soft md:col-span-8 md:text-[1.35rem] md:leading-[1.6]">
+                {s.text}
+              </p>
+            </Reveal>
+          ))}
+        </div>
+
+        {/* Next project */}
+        <Link
+          to={`/work/${next.slug}`}
+          className="group mt-28 grid items-center gap-8 rounded-[28px] border border-line p-5 transition-colors hover:border-ink sm:p-6 md:mt-36 md:grid-cols-12"
+        >
+          <Cover src={next.cover} className="aspect-[4/3] rounded-[20px] md:col-span-4" imgClassName="group-hover:scale-[1.04]" />
+          <div className="md:col-span-7 md:col-start-6">
+            <p className="text-ink-soft">Next project</p>
+            <p className="display mt-2 text-[clamp(2rem,4.5vw,3.75rem)] leading-[0.95] transition-colors group-hover:text-cobalt">
+              {next.title}
+            </p>
+            <span className="mt-6 inline-flex items-center gap-2 font-medium">
+              Read the case study
+              <ArrowUpRight className="size-5 transition-transform duration-500 ease-out-expo group-hover:rotate-45" aria-hidden="true" />
+            </span>
+          </div>
+        </Link>
+      </div>
+    </article>
+  )
+}
