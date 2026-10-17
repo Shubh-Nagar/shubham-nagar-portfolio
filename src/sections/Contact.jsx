@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { ArrowUpRight, Check, Clock, Copy, LoaderCircle, MapPin } from 'lucide-react'
+import { ArrowUpRight, Check, Clock, Copy, LoaderCircle, MapPin, Phone } from 'lucide-react'
 import { budgets, previewMessage, profile, services, whatsappLink } from '../data/site'
 import SectionHeading from '../components/ui/SectionHeading'
 import Button from '../components/ui/Button'
@@ -155,6 +155,14 @@ export default function Contact() {
             </StaggerItem>
 
             <StaggerItem as="ul" className="mt-10 space-y-4 text-ink-soft">
+              <li>
+                <a href={`tel:+${profile.whatsappNumber}`} className="flex items-center gap-3 transition-colors hover:text-ink">
+                  <Phone className="size-5 shrink-0" aria-hidden="true" />
+                  <span>
+                    Call <span className="text-ink underline decoration-line underline-offset-4">{profile.phone}</span>
+                  </span>
+                </a>
+              </li>
               <li className="flex items-center gap-3">
                 <MapPin className="size-5 shrink-0" aria-hidden="true" />
                 Based in Indore — working with clients anywhere

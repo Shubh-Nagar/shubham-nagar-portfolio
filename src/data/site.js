@@ -22,7 +22,8 @@ export const profile = {
   location: 'Indore, Madhya Pradesh',
   email: 'hello@shubhamnagar.in', // ← replace with your real email
   // Digits only, with country code — used for every WhatsApp link on the site
-  whatsappNumber: '919000000000', // ← replace
+  whatsappNumber: '919321732524',
+  phone: '+91 93217 32524', // shown on the site and used for tap-to-call
   hours: 'Mon–Sat, 10am–7pm IST',
   // Put a photo at /public/me.jpg and set this to '/me.jpg'
   photo: null,
@@ -30,11 +31,12 @@ export const profile = {
   // form submissions directly. If left empty, the form opens the visitor's
   // email app with the message pre-filled instead.
   formEndpoint: '',
-  // ← replace each href with your real profile URL
+  // Shown in the nav menu, contact section and footer, and linked in Google's structured data
   socials: [
-    { label: 'LinkedIn', href: 'https://www.linkedin.com/', icon: 'linkedin' },
-    { label: 'Instagram', href: 'https://www.instagram.com/', icon: 'instagram' },
-    { label: 'GitHub', href: 'https://github.com/', icon: 'github' },
+    { label: 'LinkedIn', href: 'https://www.linkedin.com/in/shubham-nagar05', icon: 'linkedin' },
+    // Add when ready — icons for these already exist:
+    // { label: 'Instagram', href: 'https://www.instagram.com/<handle>', icon: 'instagram' },
+    // { label: 'GitHub', href: 'https://github.com/<username>', icon: 'github' },
   ],
 }
 

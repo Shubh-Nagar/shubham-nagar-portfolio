@@ -146,7 +146,7 @@ export function getStructuredData() {
         image: OG_IMAGE.url,
         description: home.description,
         email: profile.email,
-        // telephone: add once the real number is in src/data/site.js
+        telephone: `+${profile.whatsappNumber}`,
         address,
         geo: { '@type': 'GeoCoordinates', latitude: 22.7196, longitude: 75.8577 },
         areaServed: [
