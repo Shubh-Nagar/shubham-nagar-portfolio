@@ -1,8 +1,9 @@
-import { useState } from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
+import { useRef, useState } from 'react'
+import { AnimatePresence, motion, useReducedMotion, useScroll, useTransform } from 'framer-motion'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
 import { testimonials } from '../data/site'
 import Reveal from '../components/ui/Reveal'
+import Blobs from '../components/ui/Blobs'
 
 const ease = [0.16, 1, 0.3, 1]
 
@@ -14,6 +15,12 @@ export default function Testimonials() {
   const [[index, direction], setState] = useState([0, 1])
   const total = testimonials.length
   const t = testimonials[index]
+  const ref = useRef(null)
+  const reduce = useReducedMotion()
+
+  // The dark card grows to full width as it rises into view
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'start 35%'] })
+  const scale = useTransform(scrollYProgress, [0, 1], [0.93, 1])
 
   const go = (dir) => setState(([i]) => [(i + dir + total) % total, dir])
 
@@ -23,11 +30,20 @@ export default function Testimonials() {
   }
 
   return (
-    <section
+    <motion.section
+      ref={ref}
+      style={reduce ? undefined : { scale }}
       id="testimonials"
       aria-labelledby="testimonials-title"
-      className="mx-3 rounded-[32px] bg-[#14171f] px-5 py-24 text-[#eceef2] dark:bg-surface sm:mx-4 sm:px-8 md:py-32"
+      className="relative isolate mx-3 overflow-hidden rounded-[32px] bg-[#14171f] px-5 py-24 text-[#eceef2] dark:bg-surface sm:mx-4 sm:px-8 md:py-32"
     >
+      <Blobs
+        blobs={[
+          { className: '-right-24 -top-28 size-[26rem]', color: 'bg-marigold/20 blur-[80px]', depth: -50, duration: 15 },
+          { className: '-left-28 -bottom-32 size-[30rem]', color: 'bg-[#2a3bd9]/35 blur-[90px]', depth: 40, duration: 19 },
+        ]}
+      />
+
       <div className="mx-auto max-w-[1320px]">
         <Reveal className="flex flex-wrap items-end justify-between gap-6">
           <h2 id="testimonials-title" className="display text-[clamp(2.25rem,5vw,4rem)] leading-[0.95]">
@@ -121,6 +137,6 @@ export default function Testimonials() {
           ))}
         </div>
       </div>
-    </section>
+    </motion.section>
   )
 }

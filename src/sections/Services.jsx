@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { Clapperboard, Megaphone, MonitorSmartphone, Plus, Presentation, Search, Check } from 'lucide-react'
 import { services } from '../data/site'
 import SectionHeading from '../components/ui/SectionHeading'
+import { Stagger, StaggerItem } from '../components/ui/Stagger'
 
 const icons = {
   web: MonitorSmartphone,
@@ -30,12 +31,12 @@ export default function Services() {
           intro="Most clients start with one and add the rest once they've seen the first one work."
         />
 
-        <ul className="mt-16 border-t border-line md:mt-20">
+        <Stagger as="ul" stagger={0.07} className="mt-16 border-t border-line md:mt-20">
           {services.map((service) => {
             const Icon = icons[service.icon]
             const open = openId === service.id
             return (
-              <li key={service.id} className="border-b border-line">
+              <StaggerItem as="li" key={service.id} className="border-b border-line">
                 <h3>
                   <button
                     type="button"
@@ -98,10 +99,10 @@ export default function Services() {
                     </motion.div>
                   )}
                 </AnimatePresence>
-              </li>
+              </StaggerItem>
             )
           })}
-        </ul>
+        </Stagger>
       </div>
     </section>
   )

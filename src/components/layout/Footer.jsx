@@ -3,6 +3,9 @@ import { navLinks, profile } from '../../data/site'
 import { useGoToSection } from '../../hooks/useGoToSection'
 import { scrollToTop } from '../../lib/scroll'
 import Button from '../ui/Button'
+import Reveal from '../ui/Reveal'
+import SplitText from '../ui/SplitText'
+import FollowBlob from '../ui/FollowBlob'
 import { Monogram, SocialIcon } from '../ui/Brand'
 
 export default function Footer() {
@@ -11,13 +14,16 @@ export default function Footer() {
 
   return (
     <footer className="mt-24 px-3 pb-3 sm:px-4 sm:pb-4">
-      <div className="overflow-hidden rounded-[32px] bg-cobalt text-white dark:text-[#0e1119]">
+      <div className="relative isolate overflow-hidden rounded-[32px] bg-cobalt text-white dark:text-[#0e1119]">
+        {/* Glow that trails the pointer across the panel */}
+        <FollowBlob className="bg-white/20 dark:bg-white/30" />
+
         {/* Closing call to action */}
-        <div className="mx-auto max-w-[1320px] px-6 pb-14 pt-20 sm:px-10 md:pt-28">
+        <div className="relative mx-auto max-w-[1320px] px-6 pb-14 pt-20 sm:px-10 md:pt-28">
           <p className="display max-w-[14ch] text-[clamp(2.75rem,8vw,7rem)] leading-[0.92]">
-            Have something in mind? See it first.
+            <SplitText text="Have something in mind? See it first." stagger={0.07} />
           </p>
-          <div className="mt-10 flex flex-wrap items-center gap-4">
+          <Reveal delay={0.4} className="mt-10 flex flex-wrap items-center gap-4">
             <Button
               variant="light"
               size="lg"
@@ -33,11 +39,11 @@ export default function Footer() {
             >
               {profile.email}
             </a>
-          </div>
+          </Reveal>
         </div>
 
         {/* Bottom bar */}
-        <div className="mx-auto flex max-w-[1320px] flex-col gap-8 border-t border-current/20 px-6 py-8 sm:px-10 md:flex-row md:items-center md:justify-between">
+        <div className="relative mx-auto flex max-w-[1320px] flex-col gap-8 border-t border-current/20 px-6 py-8 sm:px-10 md:flex-row md:items-center md:justify-between">
           <div className="flex items-center gap-3">
             <span className="rounded-[10px] bg-white p-0.5">
               <Monogram className="size-7" />

@@ -4,6 +4,8 @@ import { ArrowUpRight, Check, Clock, Copy, LoaderCircle, MapPin } from 'lucide-r
 import { budgets, profile, services } from '../data/site'
 import SectionHeading from '../components/ui/SectionHeading'
 import Button from '../components/ui/Button'
+import Reveal from '../components/ui/Reveal'
+import { Stagger, StaggerItem } from '../components/ui/Stagger'
 import { SocialIcon } from '../components/ui/Brand'
 
 const ease = [0.16, 1, 0.3, 1]
@@ -103,35 +105,37 @@ export default function Contact() {
 
         <div className="mt-16 grid gap-14 md:mt-20 lg:grid-cols-12 lg:gap-10">
           {/* Direct contact */}
-          <div className="lg:col-span-4">
-            <p className="text-ink-soft">Prefer email?</p>
-            <div className="mt-2 flex flex-wrap items-center gap-3">
-              <a href={`mailto:${profile.email}`} className="font-display text-2xl font-semibold tracking-tight underline decoration-line decoration-2 underline-offset-[6px] transition-colors hover:decoration-cobalt md:text-[1.75rem]">
-                {profile.email}
-              </a>
-              <button
-                type="button"
-                onClick={copyEmail}
-                aria-label="Copy email address"
-                className="inline-flex items-center gap-1.5 rounded-full border border-line px-3 py-1.5 text-sm transition-colors hover:border-ink"
-              >
-                <AnimatePresence mode="wait" initial={false}>
-                  <motion.span
-                    key={copied ? 'done' : 'copy'}
-                    initial={{ opacity: 0, y: 6 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -6 }}
-                    transition={{ duration: 0.2 }}
-                    className="inline-flex items-center gap-1.5"
-                  >
-                    {copied ? <Check className="size-4 text-cobalt" /> : <Copy className="size-4" />}
-                    {copied ? 'Copied' : 'Copy'}
-                  </motion.span>
-                </AnimatePresence>
-              </button>
-            </div>
+          <Stagger className="lg:col-span-4">
+            <StaggerItem>
+              <p className="text-ink-soft">Prefer email?</p>
+              <div className="mt-2 flex flex-wrap items-center gap-3">
+                <a href={`mailto:${profile.email}`} className="font-display text-2xl font-semibold tracking-tight underline decoration-line decoration-2 underline-offset-[6px] transition-colors hover:decoration-cobalt md:text-[1.75rem]">
+                  {profile.email}
+                </a>
+                <button
+                  type="button"
+                  onClick={copyEmail}
+                  aria-label="Copy email address"
+                  className="inline-flex items-center gap-1.5 rounded-full border border-line px-3 py-1.5 text-sm transition-colors hover:border-ink"
+                >
+                  <AnimatePresence mode="wait" initial={false}>
+                    <motion.span
+                      key={copied ? 'done' : 'copy'}
+                      initial={{ opacity: 0, y: 6 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -6 }}
+                      transition={{ duration: 0.2 }}
+                      className="inline-flex items-center gap-1.5"
+                    >
+                      {copied ? <Check className="size-4 text-cobalt" /> : <Copy className="size-4" />}
+                      {copied ? 'Copied' : 'Copy'}
+                    </motion.span>
+                  </AnimatePresence>
+                </button>
+              </div>
+            </StaggerItem>
 
-            <ul className="mt-10 space-y-4 text-ink-soft">
+            <StaggerItem as="ul" className="mt-10 space-y-4 text-ink-soft">
               <li className="flex items-center gap-3">
                 <MapPin className="size-5 shrink-0" aria-hidden="true" />
                 {profile.location} — working with clients anywhere
@@ -140,9 +144,9 @@ export default function Contact() {
                 <Clock className="size-5 shrink-0" aria-hidden="true" />
                 {profile.hours}
               </li>
-            </ul>
+            </StaggerItem>
 
-            <ul className="mt-10 flex flex-wrap gap-2">
+            <StaggerItem as="ul" className="mt-10 flex flex-wrap gap-2">
               {profile.socials.map((s) => (
                 <li key={s.label}>
                   <a
@@ -156,11 +160,11 @@ export default function Contact() {
                   </a>
                 </li>
               ))}
-            </ul>
-          </div>
+            </StaggerItem>
+          </Stagger>
 
           {/* Form */}
-          <div className="lg:col-span-7 lg:col-start-6">
+          <Reveal delay={0.15} y={40} className="lg:col-span-7 lg:col-start-6">
             <div className="relative rounded-[28px] border border-line bg-paper-2 p-6 sm:p-10">
               <AnimatePresence mode="wait" initial={false}>
                 {status === 'sent' || status === 'mailto' ? (
@@ -318,7 +322,7 @@ export default function Contact() {
                 )}
               </AnimatePresence>
             </div>
-          </div>
+          </Reveal>
         </div>
       </div>
     </section>

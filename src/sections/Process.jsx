@@ -1,11 +1,13 @@
 import { useRef } from 'react'
-import { motion, useScroll, useSpring } from 'framer-motion'
+import { motion, useScroll, useSpring, useTransform } from 'framer-motion'
 import { process } from '../data/site'
 import SectionHeading from '../components/ui/SectionHeading'
+import Reveal from '../components/ui/Reveal'
 
 /**
  * Four steps joined by a line that draws itself as you scroll through
- * the section (horizontal on desktop, vertical on mobile).
+ * the section (horizontal on desktop, vertical on mobile). Each step's
+ * number lights up as the line reaches it.
  */
 export default function Process() {
   const listRef = useRef(null)
@@ -32,22 +34,42 @@ export default function Process() {
           </div>
 
           {process.map((step, i) => (
-            <li key={step.title} className="relative grid grid-cols-[44px_1fr] gap-6 lg:block">
-              <span
-                className={`relative z-10 grid size-11 place-items-center rounded-full border font-display text-lg font-semibold ${
-                  step.highlight ? 'border-marigold bg-marigold text-[#14171f]' : 'border-line bg-paper text-ink'
-                }`}
-              >
-                {i + 1}
-              </span>
-              <div className="lg:mt-8 lg:pr-4">
-                <h3 className="font-display text-2xl font-semibold tracking-tight md:text-[1.75rem]">{step.title}</h3>
-                <p className="mt-3 max-w-sm text-ink-soft">{step.body}</p>
-              </div>
-            </li>
+            <Step key={step.title} step={step} index={i} total={process.length} progress={progress} />
           ))}
         </ol>
       </div>
     </section>
+  )
+}
+
+function Step({ step, index, total, progress }) {
+  // Steps sit at roughly even intervals along the line
+  const at = index / total
+  const lit = useTransform(progress, [at, at + 0.06], [0, 1])
+  const numberColor = useTransform(lit, (v) => (v > 0.5 ? 'var(--on-cobalt)' : 'var(--ink)'))
+
+  return (
+    <Reveal as="li" delay={index * 0.08} className="relative grid grid-cols-[44px_1fr] gap-6 lg:block">
+      <span
+        className={`relative z-10 grid size-11 place-items-center rounded-full border font-display text-lg font-semibold ${
+          step.highlight ? 'border-marigold bg-marigold text-[#14171f]' : 'border-line bg-paper text-ink'
+        }`}
+      >
+        {!step.highlight && (
+          <motion.span
+            aria-hidden="true"
+            className="absolute -inset-px rounded-full bg-cobalt"
+            style={{ opacity: lit }}
+          />
+        )}
+        <motion.span className="relative" style={step.highlight ? undefined : { color: numberColor }}>
+          {index + 1}
+        </motion.span>
+      </span>
+      <div className="lg:mt-8 lg:pr-4">
+        <h3 className="font-display text-2xl font-semibold tracking-tight md:text-[1.75rem]">{step.title}</h3>
+        <p className="mt-3 max-w-sm text-ink-soft">{step.body}</p>
+      </div>
+    </Reveal>
   )
 }

@@ -5,6 +5,7 @@ import { ArrowUpRight } from 'lucide-react'
 import { projects, workFilters } from '../data/site'
 import SectionHeading from '../components/ui/SectionHeading'
 import Cover from '../components/ui/Cover'
+import Reveal from '../components/ui/Reveal'
 
 const ease = [0.16, 1, 0.3, 1]
 
@@ -40,7 +41,7 @@ export default function Work() {
         />
 
         {/* Filters */}
-        <div role="group" aria-label="Filter projects" className="mt-12 flex flex-wrap gap-2 md:mt-16">
+        <Reveal delay={0.15} role="group" aria-label="Filter projects" className="mt-12 flex flex-wrap gap-2 md:mt-16">
           {workFilters.map((f) => {
             const active = filter === f.id
             const count = counts[f.id] || 0
@@ -67,7 +68,7 @@ export default function Work() {
               </button>
             )
           })}
-        </div>
+        </Reveal>
 
         {/* Grid */}
         <motion.ul layout className="mt-10 grid gap-x-6 gap-y-14 md:grid-cols-12 md:gap-y-16">
@@ -103,6 +104,8 @@ function ProjectCard({ project, aspect }) {
           src={project.cover}
           className={`rounded-[24px] ${aspect}`}
           imgClassName="group-hover:scale-[1.035]"
+          reveal
+          parallax={7}
         />
         <span className="absolute bottom-4 left-4 inline-flex translate-y-2 items-center gap-1.5 rounded-full border border-white/30 bg-[#14171f]/55 px-4 py-2 text-sm font-medium text-white opacity-0 backdrop-blur-md transition-all duration-500 ease-out-expo group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100">
           Read the case study
@@ -110,19 +113,22 @@ function ProjectCard({ project, aspect }) {
         </span>
       </div>
 
-      <div className="mt-5 flex items-start justify-between gap-6">
-        <div>
-          <h3 className="font-display text-[1.6rem] font-semibold leading-tight tracking-tight transition-colors group-hover:text-cobalt">
-            {project.title}
-          </h3>
-          <p className="mt-1 text-ink-soft">{project.categoryLabel}</p>
+      {/* Details follow the cover as it opens */}
+      <Reveal y={16} delay={0.2}>
+        <div className="mt-5 flex items-start justify-between gap-6">
+          <div>
+            <h3 className="font-display text-[1.6rem] font-semibold leading-tight tracking-tight transition-colors group-hover:text-cobalt">
+              {project.title}
+            </h3>
+            <p className="mt-1 text-ink-soft">{project.categoryLabel}</p>
+          </div>
+          <span className="pt-1.5 text-sm tabular-nums text-ink-soft">{project.year}</span>
         </div>
-        <span className="pt-1.5 text-sm tabular-nums text-ink-soft">{project.year}</span>
-      </div>
-      <p className="mt-4 flex items-center gap-2.5 text-[0.95rem]">
-        <span className="size-1.5 shrink-0 rounded-full bg-marigold" aria-hidden="true" />
-        {project.result}
-      </p>
+        <p className="mt-4 flex items-center gap-2.5 text-[0.95rem]">
+          <span className="size-1.5 shrink-0 rounded-full bg-marigold" aria-hidden="true" />
+          {project.result}
+        </p>
+      </Reveal>
     </Link>
   )
 }

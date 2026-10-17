@@ -1,32 +1,70 @@
 import { useEffect, useRef, useState } from 'react'
+import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion'
+
+const ease = [0.16, 1, 0.3, 1]
 
 /**
  * Image that fades in once loaded, with a soft placeholder underneath —
  * the "loading state" for project covers.
+ *
+ * `reveal`   opens the frame from the centre (and settles the zoom) the first
+ *            time it scrolls into view. Meant for 24–28px rounded frames.
+ * `parallax` lets the picture drift slower than the page, in % of its height.
  */
-export default function Cover({ src, alt = '', className = '', imgClassName = '', eager = false }) {
+export default function Cover({ src, alt = '', className = '', imgClassName = '', eager = false, reveal = false, parallax = 0 }) {
   const [loaded, setLoaded] = useState(false)
   const imgRef = useRef(null)
+  const frameRef = useRef(null)
+  const reduce = useReducedMotion()
 
   // Cached images can finish before React attaches onLoad
   useEffect(() => {
     if (imgRef.current?.complete) setLoaded(true)
   }, [src])
 
+  // The image layer is oversized by `parallax`% top and bottom, so it never travels past its edges
+  const { scrollYProgress } = useScroll({ target: frameRef, offset: ['start end', 'end start'] })
+  const travel = parallax / (1 + (2 * parallax) / 100)
+  const y = useTransform(scrollYProgress, [0, 1], [`-${travel}%`, `${travel}%`])
+  const drift = parallax > 0 && !reduce
+
+  const revealProps =
+    reveal && !reduce
+      ? {
+          initial: 'hidden',
+          whileInView: 'show',
+          viewport: { once: true, margin: '0px 0px -10% 0px' },
+          variants: {
+            hidden: { clipPath: 'inset(8% 8% 8% 8% round 24px)' },
+            show: { clipPath: 'inset(0% 0% 0% 0% round 24px)', transition: { duration: 1.2, ease } },
+          },
+        }
+      : {}
+
   return (
-    <div className={`relative overflow-hidden bg-paper-2 ${className}`}>
+    <motion.div ref={frameRef} className={`relative overflow-hidden bg-paper-2 ${className}`} {...revealProps}>
       {!loaded && <div className="absolute inset-0 animate-pulse bg-line/40" aria-hidden="true" />}
-      <img
-        ref={imgRef}
-        src={src}
-        alt={alt}
-        loading={eager ? 'eager' : 'lazy'}
-        decoding="async"
-        onLoad={() => setLoaded(true)}
-        className={`size-full object-cover transition-[opacity,transform] duration-700 ease-out-expo ${
-          loaded ? 'opacity-100' : 'opacity-0'
-        } ${imgClassName}`}
-      />
-    </div>
+      <motion.div
+        className="absolute inset-x-0"
+        style={drift ? { top: `-${parallax}%`, bottom: `-${parallax}%`, y } : { top: 0, bottom: 0 }}
+      >
+        <motion.div
+          className="size-full"
+          variants={{ hidden: { scale: 1.18 }, show: { scale: 1, transition: { duration: 1.4, ease } } }}
+        >
+          <img
+            ref={imgRef}
+            src={src}
+            alt={alt}
+            loading={eager ? 'eager' : 'lazy'}
+            decoding="async"
+            onLoad={() => setLoaded(true)}
+            className={`size-full object-cover transition-[opacity,transform] duration-700 ease-out-expo ${
+              loaded ? 'opacity-100' : 'opacity-0'
+            } ${imgClassName}`}
+          />
+        </motion.div>
+      </motion.div>
+    </motion.div>
   )
 }

@@ -6,6 +6,9 @@ import { projects } from '../data/site'
 import { useGoToSection } from '../hooks/useGoToSection'
 import Cover from '../components/ui/Cover'
 import Reveal from '../components/ui/Reveal'
+import SplitText from '../components/ui/SplitText'
+import CountUp from '../components/ui/CountUp'
+import { Stagger, StaggerItem } from '../components/ui/Stagger'
 import NotFound from './NotFound'
 
 const ease = [0.16, 1, 0.3, 1]
@@ -52,18 +55,24 @@ export default function ProjectPage() {
 
         <header className="mt-10 grid gap-10 lg:grid-cols-12">
           <div className="lg:col-span-8">
-            <p className="text-cobalt">{project.categoryLabel}</p>
-            <h1 className="display mt-3 text-[clamp(2.75rem,7vw,6rem)] leading-[0.95]">{project.title}</h1>
-            <p className="mt-6 max-w-2xl text-xl text-ink-soft md:text-2xl md:leading-snug">{project.summary}</p>
+            <Reveal as="p" y={12} delay={0.3} className="text-cobalt">
+              {project.categoryLabel}
+            </Reveal>
+            <h1 className="display mt-3 text-[clamp(2.75rem,7vw,6rem)] leading-[0.95]">
+              <SplitText key={project.slug} text={project.title} delay={0.35} stagger={0.07} />
+            </h1>
+            <Reveal as="p" delay={0.6} className="mt-6 max-w-2xl text-xl text-ink-soft md:text-2xl md:leading-snug">
+              {project.summary}
+            </Reveal>
           </div>
-          <dl className="grid grid-cols-2 gap-x-6 gap-y-5 self-end text-[0.95rem] lg:col-span-4 lg:grid-cols-1">
+          <Stagger as="dl" delay={0.6} className="grid grid-cols-2 gap-x-6 gap-y-5 self-end text-[0.95rem] lg:col-span-4 lg:grid-cols-1">
             {meta.map((m) => (
-              <div key={m.label}>
+              <StaggerItem key={m.label} y={12}>
                 <dt className="text-ink-soft">{m.label}</dt>
                 <dd className="mt-0.5">{m.value}</dd>
-              </div>
+              </StaggerItem>
             ))}
-          </dl>
+          </Stagger>
         </header>
 
         <motion.div
@@ -72,18 +81,18 @@ export default function ProjectPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, ease, delay: 0.5 }}
         >
-          <Cover src={project.cover} alt={`${project.title} project visual`} eager className="aspect-[4/3] rounded-[28px] md:aspect-[3/2]" />
+          <Cover src={project.cover} alt={`${project.title} project visual`} eager parallax={6} className="aspect-[4/3] rounded-[28px] md:aspect-[3/2]" />
         </motion.div>
 
         {/* Results */}
-        <ul className="mt-6 grid gap-3 sm:grid-cols-3">
+        <Stagger as="ul" stagger={0.1} className="mt-6 grid gap-3 sm:grid-cols-3">
           {project.metrics.map((m) => (
-            <li key={m.label} className="rounded-[22px] bg-paper-2 px-6 py-7">
-              <span className="display block text-[2.75rem] leading-none text-cobalt">{m.value}</span>
+            <StaggerItem as="li" key={m.label} className="rounded-[22px] bg-paper-2 px-6 py-7">
+              <CountUp value={m.value} className="display block text-[2.75rem] leading-none tabular-nums text-cobalt" />
               <span className="mt-2 block text-ink-soft">{m.label}</span>
-            </li>
+            </StaggerItem>
           ))}
-        </ul>
+        </Stagger>
 
         {/* Story */}
         <div className="mt-24 space-y-16 md:mt-32 md:space-y-20">
@@ -98,22 +107,24 @@ export default function ProjectPage() {
         </div>
 
         {/* Next project */}
-        <Link
-          to={`/work/${next.slug}`}
-          className="group mt-28 grid items-center gap-8 rounded-[28px] border border-line p-5 transition-colors hover:border-ink sm:p-6 md:mt-36 md:grid-cols-12"
-        >
-          <Cover src={next.cover} className="aspect-[4/3] rounded-[20px] md:col-span-4" imgClassName="group-hover:scale-[1.04]" />
-          <div className="md:col-span-7 md:col-start-6">
-            <p className="text-ink-soft">Next project</p>
-            <p className="display mt-2 text-[clamp(2rem,4.5vw,3.75rem)] leading-[0.95] transition-colors group-hover:text-cobalt">
-              {next.title}
-            </p>
-            <span className="mt-6 inline-flex items-center gap-2 font-medium">
-              Read the case study
-              <ArrowUpRight className="size-5 transition-transform duration-500 ease-out-expo group-hover:rotate-45" aria-hidden="true" />
-            </span>
-          </div>
-        </Link>
+        <Reveal y={40}>
+          <Link
+            to={`/work/${next.slug}`}
+            className="group mt-28 grid items-center gap-8 rounded-[28px] border border-line p-5 transition-colors hover:border-ink sm:p-6 md:mt-36 md:grid-cols-12"
+          >
+            <Cover src={next.cover} className="aspect-[4/3] rounded-[20px] md:col-span-4" imgClassName="group-hover:scale-[1.04]" />
+            <div className="md:col-span-7 md:col-start-6">
+              <p className="text-ink-soft">Next project</p>
+              <p className="display mt-2 text-[clamp(2rem,4.5vw,3.75rem)] leading-[0.95] transition-colors group-hover:text-cobalt">
+                {next.title}
+              </p>
+              <span className="mt-6 inline-flex items-center gap-2 font-medium">
+                Read the case study
+                <ArrowUpRight className="size-5 transition-transform duration-500 ease-out-expo group-hover:rotate-45" aria-hidden="true" />
+              </span>
+            </div>
+          </Link>
+        </Reveal>
       </div>
     </article>
   )
