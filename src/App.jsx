@@ -8,6 +8,7 @@ import Footer from './components/layout/Footer'
 import ScrollProgress from './components/layout/ScrollProgress'
 import PageTransition from './components/layout/PageTransition'
 import RouteMeta from './components/layout/RouteMeta'
+import WhatsAppButton from './components/layout/WhatsAppButton'
 import Home from './pages/Home'
 import { scrollToTop, setLenis } from './lib/scroll'
 
@@ -67,6 +68,7 @@ export default function App() {
       </AnimatePresence>
 
       <Footer />
+      <WhatsAppButton />
     </MotionConfig>
   )
 }
