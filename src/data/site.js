@@ -20,7 +20,7 @@ export const profile = {
   shortName: 'Shubham',
   role: 'Designer & developer',
   location: 'Indore, Madhya Pradesh',
-  email: 'hello@shubhamnagar.in', // ← replace with your real email
+  email: 'shubham.nagar2001@gmail.com', // switch to a @shubhamnagar.in address once domain email is set up
   // Digits only, with country code — used for every WhatsApp link on the site
   whatsappNumber: '919321732524',
   phone: '+91 93217 32524', // shown on the site and used for tap-to-call

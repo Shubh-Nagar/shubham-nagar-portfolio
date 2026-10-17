@@ -55,7 +55,7 @@ Electronics engineering → automating business processes at a Mumbai startup �
 `npm run build` lists every `[PLACEHOLDER]` still on the site, page by page. The main ones:
 
 - [x] WhatsApp / phone number and LinkedIn
-- [ ] Real email address — `profile.email` in `src/data/site.js`
+- [x] Email address (later: a @shubhamnagar.in address — one line in `profile.email`)
 - [ ] Instagram and GitHub URLs (optional) — uncomment them in `profile.socials`
 - [ ] Your photo — `public/me.jpg`, then `profile.photo: '/me.jpg'`
 - [ ] Number of websites shipped — `proof.stats`
