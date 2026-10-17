@@ -23,6 +23,9 @@ export default function Footer() {
           <p className="display max-w-[14ch] text-[clamp(2.75rem,8vw,7rem)] leading-[0.92]">
             <SplitText text="Have something in mind? See it first." stagger={0.07} />
           </p>
+          <p lang="hi-Latn" className="mt-6 font-display text-xl font-medium opacity-80 md:text-2xl">
+            Pehle dekhiye, phir decide kijiye.
+          </p>
           <Reveal delay={0.4} className="mt-10 flex flex-wrap items-center gap-4">
             <Button
               variant="light"
@@ -31,7 +34,7 @@ export default function Footer() {
               onClick={(e) => goTo('contact', e)}
               icon={ArrowUpRight}
             >
-              Start a project
+              Get your free preview
             </Button>
             <a
               href={`mailto:${profile.email}`}

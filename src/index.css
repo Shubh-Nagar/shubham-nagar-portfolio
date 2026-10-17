@@ -133,6 +133,94 @@
   background-size: 22px 22px;
 }
 
+/* Content still to be supplied — ph('…') in src/data/site.js */
+.placeholder {
+  display: inline;
+  padding: 0.05em 0.4em;
+  border: 1.5px dashed color-mix(in srgb, var(--marigold) 85%, var(--ink));
+  border-radius: 0.4em;
+  background: color-mix(in srgb, var(--marigold) 16%, transparent);
+  color: inherit;
+  font-family: var(--font-sans);
+  font-size: max(0.75em, 0.8rem);
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: 1.9;
+  font-stretch: 100%;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+/* Compact version for spots set in huge display type (stats) */
+.placeholder.placeholder-sm {
+  display: inline-block;
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+/* Infinite tool marquee in the proof strip (static with reduced motion) */
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+.marquee {
+  animation: marquee 40s linear infinite;
+}
+
+/* Long-form text for notes (rendered from Markdown) */
+.note-body {
+  font-size: 1.15rem;
+  line-height: 1.75;
+  color: var(--ink);
+}
+.note-body > * + * {
+  margin-top: 1.1em;
+}
+.note-body h2 {
+  margin-top: 2.2em;
+  font-size: 1.75rem;
+}
+.note-body h3 {
+  margin-top: 1.8em;
+  font-size: 1.3rem;
+}
+.note-body ul,
+.note-body ol {
+  padding-left: 1.3em;
+}
+.note-body ul {
+  list-style: disc;
+}
+.note-body ol {
+  list-style: decimal;
+}
+.note-body li + li {
+  margin-top: 0.4em;
+}
+.note-body li::marker {
+  color: var(--cobalt);
+}
+.note-body a {
+  color: var(--cobalt);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.note-body blockquote {
+  border-left: 3px solid var(--marigold);
+  padding-left: 1.1em;
+  color: var(--ink-soft);
+}
+.note-body code {
+  border-radius: 6px;
+  background: var(--paper-2);
+  padding: 0.1em 0.35em;
+  font-size: 0.9em;
+}
+.note-body strong {
+  font-weight: 600;
+}
+
 /* Soft organic shape that slowly changes outline (hero, testimonials, footer) */
 @keyframes blob-morph {
   0%,

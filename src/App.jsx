@@ -11,9 +11,11 @@ import RouteMeta from './components/layout/RouteMeta'
 import Home from './pages/Home'
 import { scrollToTop, setLenis } from './lib/scroll'
 
-// Case-study and 404 pages are split into their own chunks
+// Case-study, notes and 404 pages are split into their own chunks
 const ProjectPage = lazy(() => import('./pages/ProjectPage'))
 const NotFound = lazy(() => import('./pages/NotFound'))
+const NotesIndex = lazy(() => import('./pages/NotesIndex'))
+const NotePage = lazy(() => import('./pages/NotePage'))
 
 export default function App() {
   const location = useLocation()
@@ -56,6 +58,8 @@ export default function App() {
             <Routes location={location}>
               <Route path="/" element={<Home />} />
               <Route path="/work/:slug" element={<ProjectPage />} />
+              <Route path="/notes" element={<NotesIndex />} />
+              <Route path="/notes/:slug" element={<NotePage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>

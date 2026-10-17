@@ -68,7 +68,7 @@ export default function Navbar() {
           </Link>
 
           {/* Desktop links */}
-          <ul className="hidden items-center gap-1 lg:flex">
+          <ul className="hidden items-center gap-1 xl:flex">
             {navLinks.map((link) => (
               <li key={link.id}>
                 <a
@@ -96,7 +96,7 @@ export default function Navbar() {
             <ThemeToggle />
             <span className="hidden sm:block">
               <Button href="/#contact" onClick={handleLink('contact')} icon={ArrowUpRight}>
-                Start a project
+                Get your free preview
               </Button>
             </span>
 
@@ -107,7 +107,7 @@ export default function Navbar() {
               aria-expanded={open}
               aria-controls="mobile-menu"
               aria-label={open ? 'Close menu' : 'Open menu'}
-              className="relative grid size-11 place-items-center rounded-full bg-ink text-paper lg:hidden"
+              className="relative grid size-11 place-items-center rounded-full bg-ink text-paper xl:hidden"
             >
               <span className="relative block h-3 w-5">
                 <motion.span
@@ -131,7 +131,7 @@ export default function Navbar() {
         {open && (
           <motion.div
             id="mobile-menu"
-            className="fixed inset-x-0 bottom-0 top-[72px] z-40 flex flex-col overflow-y-auto bg-paper px-5 pb-8 pt-6 sm:px-8 lg:hidden"
+            className="fixed inset-x-0 bottom-0 top-[72px] z-40 flex flex-col overflow-y-auto bg-paper px-5 pb-8 pt-6 sm:px-8 xl:hidden"
             initial={{ clipPath: 'inset(0 0 100% 0)' }}
             animate={{ clipPath: 'inset(0 0 0% 0)' }}
             exit={{ clipPath: 'inset(0 0 100% 0)' }}

@@ -25,21 +25,26 @@ Almost everything lives in **`src/data/site.js`**:
 
 | What | Where |
 | --- | --- |
-| Name, email, phone, WhatsApp, socials, availability line | `profile` |
-| Hero headline (one string per line) and intro | `hero` |
+| Name, email, WhatsApp number, socials | `profile` |
+| Hero eyebrow, headline (one string per line), Hindi tagline, intro | `hero` |
+| Sectors, stats and tools in the strip under the hero | `proof` |
 | Story, quick facts, skills | `about` |
-| The five services, deliverables, timelines | `services` |
-| Projects and case studies (`/work/:slug`) | `projects` |
+| The five services (outcome first), deliverables, timelines | `services` |
+| "Because I'm an engineer" band | `engineering` |
+| Case studies (`/work/:slug`) — set `hidden: true` to keep one off the site | `allProjects` |
 | Process steps | `process` |
-| Testimonials | `testimonials` |
+| Testimonials — delete them all to hide the section | `testimonials` |
 
-Placeholders to replace before going live:
+**Notes** are Markdown files in `src/content/notes/` — the file name becomes the URL
+(`my-note.md` → `/notes/my-note`). Frontmatter needs `title`, `date` and ideally `summary`;
+`draft: true` shows a Draft badge and keeps the note out of search results and the sitemap.
 
-- `profile.email`, `profile.phone`, `profile.whatsapp` and the social URLs.
-- **Your photo:** add `public/me.jpg` and set `profile.photo: '/me.jpg'`.
-- **Project images:** covers are SVG illustrations in `public/work/`. Drop in real screenshots
-  (JPG/PNG/WebP, ~1600×1200, 4:3 works best) and update each project's `cover` path.
-- Projects and testimonials are realistic placeholders — swap them for real ones as you collect them.
+**Placeholders:** anything written as `ph('…')` shows on the site as a dashed `[PLACEHOLDER: …]` tag,
+and `npm run build` lists every one still left. Replace them with real content — never with invented
+numbers or quotes. Bios and the full pre-launch checklist are in [`BRAND.md`](BRAND.md).
+
+**Images:** your photo goes in `public/me.jpg` (then set `profile.photo: '/me.jpg'`).
+Project screenshots go in `public/work/` (JPG/WebP, ~1600×1200, 4:3) — set each project's `cover`.
 
 ## Contact form
 
@@ -60,11 +65,13 @@ src/
     hero/PreviewReveal    the drag-to-compare wireframe/finished preview
     layout/               Navbar, Footer, ScrollProgress, PageTransition
     ui/                   Button, Reveal, SectionHeading, Cover, ThemeToggle, Brand icons
-  sections/               Hero, Work, Services, About, Process, Testimonials, Contact
-  pages/                  Home, ProjectPage (case study), NotFound
+  content/notes/*.md      notes (Markdown)
+  lib/notes.js            loads and parses the notes
+  sections/               Hero, ProofStrip, Work, Process, Services, About, Testimonials, Notes, Contact
+  pages/                  Home, ProjectPage, NotesIndex, NotePage, NotFound
   hooks/                  theme, active nav section, section scrolling
 public/
-  work/*.svg              project cover illustrations
+  work/                   project screenshots (add your own)
   og.png                  social share image (npm run og)
   .htaccess               clean URLs + 404 for Apache/LiteSpeed (Hostinger, cPanel)
   _redirects              404 handling for Netlify
@@ -109,7 +116,7 @@ Check a build the way a crawler sees it:
 
 ```bash
 npm run build && npm run preview
-curl -s http://localhost:4173/work/kaveri-dental | grep "<title>"
+curl -s http://localhost:4173/work/cleanlabel-ai | grep "<title>"
 ```
 
 ## Deploying

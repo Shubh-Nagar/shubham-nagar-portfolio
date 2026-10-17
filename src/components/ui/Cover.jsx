@@ -10,6 +10,7 @@ const ease = [0.16, 1, 0.3, 1]
  * `reveal`   opens the frame from the centre (and settles the zoom) the first
  *            time it scrolls into view. Meant for 24–28px rounded frames.
  * `parallax` lets the picture drift slower than the page, in % of its height.
+ * Without a `src` it shows a neutral placeholder panel until a real screenshot is added.
  */
 export default function Cover({ src, alt = '', className = '', imgClassName = '', eager = false, reveal = false, parallax = 0 }) {
   const [loaded, setLoaded] = useState(false)
@@ -40,6 +41,16 @@ export default function Cover({ src, alt = '', className = '', imgClassName = ''
           },
         }
       : {}
+
+  if (!src) {
+    return (
+      <motion.div ref={frameRef} className={`relative overflow-hidden bg-cobalt-soft ${className}`} {...revealProps}>
+        <div className="dot-grid absolute inset-0 grid place-items-center p-6">
+          <span className="placeholder bg-paper/70 text-sm">{alt ? `[PLACEHOLDER: screenshot — ${alt}]` : '[PLACEHOLDER: screenshot]'}</span>
+        </div>
+      </motion.div>
+    )
+  }
 
   return (
     <motion.div ref={frameRef} className={`relative overflow-hidden bg-paper-2 ${className}`} {...revealProps}>

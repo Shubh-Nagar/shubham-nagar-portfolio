@@ -1,10 +1,12 @@
 import { Link, useParams } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { ArrowLeft, ArrowUpRight } from 'lucide-react'
-import { projects } from '../data/site'
+import { ArrowLeft, ArrowUpRight, ExternalLink } from 'lucide-react'
+import { isPlaceholder, ph, projects } from '../data/site'
 import { useGoToSection } from '../hooks/useGoToSection'
 import Cover from '../components/ui/Cover'
 import Reveal from '../components/ui/Reveal'
+import Fill from '../components/ui/Fill'
+import Button from '../components/ui/Button'
 import SplitText from '../components/ui/SplitText'
 import CountUp from '../components/ui/CountUp'
 import { Stagger, StaggerItem } from '../components/ui/Stagger'
@@ -28,11 +30,16 @@ export default function ProjectPage() {
     { label: 'Services', value: project.services.join(', ') },
     { label: 'Year', value: project.year },
     { label: 'Timeline', value: project.duration },
-  ]
+  ].filter((m) => m.value)
+
+  // Until real results are in, show three marked slots rather than invented numbers
+  const metrics = project.metrics.length
+    ? project.metrics
+    : [1, 2, 3].map((n) => ({ value: ph('number'), label: ph(`result ${n}`) }))
 
   const story = [
     { label: 'The problem', text: project.challenge },
-    { label: 'What we did', text: project.approach },
+    { label: 'What I built', text: project.approach },
     { label: 'What changed', text: project.outcome },
   ]
 
@@ -59,12 +66,21 @@ export default function ProjectPage() {
             <Reveal as="p" delay={0.6} className="mt-6 max-w-2xl text-xl text-ink-soft md:text-2xl md:leading-snug">
               {project.summary}
             </Reveal>
+            {project.url && (
+              <Reveal delay={0.7} className="mt-8">
+                <Button href={project.url} target="_blank" rel="noreferrer" variant="ghost" icon={ExternalLink} iconHover="right">
+                  Visit the live site
+                </Button>
+              </Reveal>
+            )}
           </div>
           <Stagger as="dl" delay={0.6} className="grid grid-cols-2 gap-x-6 gap-y-5 self-end text-[0.95rem] lg:col-span-4 lg:grid-cols-1">
             {meta.map((m) => (
               <StaggerItem key={m.label} y={12}>
                 <dt className="text-ink-soft">{m.label}</dt>
-                <dd className="mt-0.5">{m.value}</dd>
+                <dd className="mt-0.5">
+                  <Fill value={m.value} />
+                </dd>
               </StaggerItem>
             ))}
           </Stagger>
@@ -81,10 +97,18 @@ export default function ProjectPage() {
 
         {/* Results */}
         <Stagger as="ul" stagger={0.1} className="mt-6 grid gap-3 sm:grid-cols-3">
-          {project.metrics.map((m) => (
+          {metrics.map((m) => (
             <StaggerItem as="li" key={m.label} className="rounded-[22px] bg-paper-2 px-6 py-7">
-              <CountUp value={m.value} className="display block text-[2.75rem] leading-none tabular-nums text-cobalt" />
-              <span className="mt-2 block text-ink-soft">{m.label}</span>
+              {isPlaceholder(m.value) ? (
+                <span className="block text-cobalt">
+                  <Fill value={m.value} />
+                </span>
+              ) : (
+                <CountUp value={m.value} className="display block text-[2.75rem] leading-none tabular-nums text-cobalt" />
+              )}
+              <span className="mt-2 block text-ink-soft">
+                <Fill value={m.label} />
+              </span>
             </StaggerItem>
           ))}
         </Stagger>
@@ -95,7 +119,7 @@ export default function ProjectPage() {
             <Reveal key={s.label} className="grid gap-4 border-t border-line pt-8 md:grid-cols-12 md:gap-10">
               <h2 className="font-display text-2xl font-semibold md:col-span-4">{s.label}</h2>
               <p className="max-w-[62ch] text-xl leading-relaxed text-ink-soft md:col-span-8 md:text-[1.35rem] md:leading-[1.6]">
-                {s.text}
+                <Fill value={s.text} />
               </p>
             </Reveal>
           ))}

@@ -15,7 +15,7 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const dist = join(root, 'dist')
 const ssrDir = join(root, 'dist-ssr')
 
-const { render, getRoutes, getRouteMeta, renderHeadTags, SITE_URL } = await import(
+const { render, getRoutes, getRouteMeta, getSitemapRoutes, renderHeadTags, SITE_URL } = await import(
   pathToFileURL(join(ssrDir, 'entry-server.js')).href
 )
 
@@ -26,8 +26,12 @@ if (!SEO_BLOCK.test(template) || !template.includes('<div id="root"></div>')) {
   throw new Error('index.html is missing the <!-- seo --> block or the empty #root element')
 }
 
+const placeholders = new Map() // page → count, reported at the end
+
 async function writePage(url, file) {
   const appHtml = await render(url)
+  const found = appHtml.match(/\[PLACEHOLDER/g)
+  if (found) placeholders.set(url, found.length)
   const html = template
     .replace(SEO_BLOCK, renderHeadTags(getRouteMeta(url)))
     .replace('<div id="root"></div>', `<div id="root">${appHtml}</div>`)
@@ -45,15 +49,24 @@ await writePage('/404', join(dist, '404.html'))
 
 // Sitemap + robots
 const today = new Date().toISOString().slice(0, 10)
+const indexable = getSitemapRoutes()
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${routes
+${indexable
   .map((url) => `  <url><loc>${SITE_URL}${url}</loc><lastmod>${today}</lastmod></url>`)
   .join('\n')}
 </urlset>
 `
 await writeFile(join(dist, 'sitemap.xml'), sitemap)
 await writeFile(join(dist, 'robots.txt'), `User-agent: *\nAllow: /\n\nSitemap: ${SITE_URL}/sitemap.xml\n`)
-console.log(`  wrote sitemap.xml (${routes.length} URLs) and robots.txt`)
+console.log(`  wrote sitemap.xml (${indexable.length} URLs) and robots.txt`)
+
+// Unfinished content must not go live unnoticed
+if (placeholders.size) {
+  const total = [...placeholders.values()].reduce((a, b) => a + b, 0)
+  console.warn(`
+  ⚠ ${total} [PLACEHOLDER] items still on the site — replace them in src/data/site.js before launch:`)
+  for (const [url, count] of placeholders) console.warn(`      ${url.padEnd(32)} ${count}`)
+}
 
 await rm(ssrDir, { recursive: true, force: true })

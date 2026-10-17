@@ -19,8 +19,8 @@ export default function Process() {
       <div className="mx-auto max-w-[1320px]">
         <SectionHeading
           id="process-title"
-          title="How a project runs"
-          intro="Four steps, no surprises. You only pay once you've seen something you like."
+          title="How it works"
+          intro="Pehle dekhiye, phir decide kijiye. You see a working preview before you pay a rupee — and only pay once you like it."
         />
 
         <ol ref={listRef} className="relative mt-16 grid gap-12 md:mt-24 lg:grid-cols-4 lg:gap-10">

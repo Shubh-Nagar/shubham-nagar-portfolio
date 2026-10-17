@@ -94,7 +94,7 @@ export default function PreviewReveal() {
               <span className="size-2.5 rounded-full bg-[#28c840]" />
             </div>
             <div className="mx-auto flex h-7 w-full max-w-[60%] items-center justify-center rounded-full bg-paper-2 text-xs text-ink-soft">
-              kaveridental.in
+              preview.yourclinic.in
             </div>
             <span className="w-[42px]" aria-hidden="true" />
           </div>
@@ -201,7 +201,7 @@ function MiniSite({ wire = false }) {
             <span className="grid size-[4.6cqw] place-items-center rounded-full" style={{ background: c.teal }}>
               <span className="size-[1.8cqw] rounded-full" style={{ background: c.mint }} />
             </span>
-            Kaveri Dental
+            Your Clinic
           </div>
         )}
         {wire ? (
@@ -302,7 +302,7 @@ function MiniSite({ wire = false }) {
               className="absolute bottom-[2.4cqw] left-[2.4cqw] rounded-full bg-white px-[1.8cqw] py-[0.9cqw] text-[1.7cqw] font-semibold shadow-sm"
               style={{ color: c.ink }}
             >
-              4.9 ★ from 380 reviews
+              Open today till 8pm
             </span>
           </div>
         )}

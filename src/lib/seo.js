@@ -11,6 +11,7 @@
  * ------------------------------------------------------------------
  */
 import { profile, projects, services } from '../data/site'
+import { getNote, notes } from './notes'
 
 export const SITE_URL = 'https://shubhamnagar.in'
 export const SITE_NAME = 'Shubham Nagar'
@@ -30,9 +31,14 @@ const notFound = {
   noindex: true,
 }
 
-/** Every URL that gets its own prerendered HTML file (and a sitemap entry). */
+/** Every URL that gets its own prerendered HTML file. */
 export function getRoutes() {
-  return ['/', ...projects.map((p) => `/work/${p.slug}`)]
+  return ['/', ...projects.map((p) => `/work/${p.slug}`), '/notes', ...notes.map((n) => `/notes/${n.slug}`)]
+}
+
+/** The URLs search engines should index — drafts are left out. */
+export function getSitemapRoutes() {
+  return getRoutes().filter((path) => !getRouteMeta(path).noindex)
 }
 
 /** Head metadata for a pathname. Unknown paths get the 404 metadata. */
@@ -50,6 +56,31 @@ export function getRouteMeta(pathname) {
         socialTitle: `${project.title} — a case study by Shubham Nagar`,
         description: project.summary,
         type: 'article',
+      },
+      path,
+    )
+  }
+
+  if (path === '/notes') {
+    return withDefaults(
+      {
+        title: 'Notes — Shubham Nagar',
+        description: 'Short, practical pieces for business owners: website teardowns, local SEO, and what actually brings in enquiries.',
+      },
+      path,
+    )
+  }
+
+  const notePath = path.match(/^\/notes\/([^/]+)$/)
+  const note = notePath && getNote(notePath[1])
+  if (note) {
+    return withDefaults(
+      {
+        title: `${note.title} — Shubham Nagar`,
+        description: note.summary || home.description,
+        type: 'article',
+        // Drafts can be previewed on the site but stay out of search results
+        noindex: note.draft,
       },
       path,
     )

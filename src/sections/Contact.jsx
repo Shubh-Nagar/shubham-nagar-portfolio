@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { ArrowUpRight, Check, Clock, Copy, LoaderCircle, MapPin } from 'lucide-react'
-import { budgets, profile, services } from '../data/site'
+import { budgets, previewMessage, profile, services, whatsappLink } from '../data/site'
 import SectionHeading from '../components/ui/SectionHeading'
 import Button from '../components/ui/Button'
 import Reveal from '../components/ui/Reveal'
@@ -99,15 +99,34 @@ export default function Contact() {
       <div className="mx-auto max-w-[1320px]">
         <SectionHeading
           id="contact-title"
-          title="Tell me what you're working on."
-          intro="I reply within one working day. If it's a fit, you'll have a free preview within a week."
+          title="Get your free preview."
+          intro="Tell me about your business. If it's a fit, you'll see a working preview before you pay anything."
         />
 
         <div className="mt-16 grid gap-14 md:mt-20 lg:grid-cols-12 lg:gap-10">
           {/* Direct contact */}
           <Stagger className="lg:col-span-4">
+            {/* WhatsApp first — the quickest way for most clients */}
             <StaggerItem>
-              <p className="text-ink-soft">Prefer email?</p>
+              <a
+                href={whatsappLink(previewMessage)}
+                target="_blank"
+                rel="noreferrer"
+                className="group flex items-center gap-4 rounded-[24px] bg-[#157a43] p-5 text-white transition-[background-color,transform] duration-300 hover:bg-[#10663a] active:scale-[0.98]"
+              >
+                <span className="grid size-12 shrink-0 place-items-center rounded-full bg-white/15">
+                  <SocialIcon name="whatsapp" className="size-6" />
+                </span>
+                <span className="flex-1">
+                  <span className="block font-display text-xl font-semibold tracking-tight">Chat on WhatsApp</span>
+                  <span className="block text-sm text-white/90">The quickest way to reach me</span>
+                </span>
+                <ArrowUpRight className="size-5 transition-transform duration-500 ease-out-expo group-hover:rotate-45" aria-hidden="true" />
+              </a>
+            </StaggerItem>
+
+            <StaggerItem className="mt-10">
+              <p className="text-ink-soft">Or email</p>
               <div className="mt-2 flex flex-wrap items-center gap-3">
                 <a href={`mailto:${profile.email}`} className="font-display text-2xl font-semibold tracking-tight underline decoration-line decoration-2 underline-offset-[6px] transition-colors hover:decoration-cobalt md:text-[1.75rem]">
                   {profile.email}
@@ -138,7 +157,7 @@ export default function Contact() {
             <StaggerItem as="ul" className="mt-10 space-y-4 text-ink-soft">
               <li className="flex items-center gap-3">
                 <MapPin className="size-5 shrink-0" aria-hidden="true" />
-                {profile.location} — working with clients anywhere
+                Based in Indore — working with clients anywhere
               </li>
               <li className="flex items-center gap-3">
                 <Clock className="size-5 shrink-0" aria-hidden="true" />
@@ -216,7 +235,7 @@ export default function Contact() {
                           onChange={set('name')}
                           aria-invalid={!!errors.name}
                           aria-describedby={errors.name ? 'field-name-error' : undefined}
-                          placeholder="Ananya Kulkarni"
+                          placeholder="Your full name"
                           className={`${inputBase} ${errors.name ? 'border-[#c4382d]' : 'border-line'}`}
                         />
                       </Field>

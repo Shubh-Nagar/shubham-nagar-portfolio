@@ -33,7 +33,7 @@ const stickers = [
     render: () => (
       <div className="flex items-center gap-1.5 rounded-full border border-line bg-surface px-3.5 py-2 text-sm font-semibold shadow-[0_12px_30px_-12px_rgba(20,23,31,.35)]">
         <Heart className="size-4 fill-[#ff5a6e] text-[#ff5a6e]" />
-        2.4k
+        New follower
       </div>
     ),
   },
@@ -47,9 +47,9 @@ const stickers = [
       <div className="rounded-2xl border border-line bg-surface px-4 py-3 shadow-[0_16px_36px_-14px_rgba(20,23,31,.4)]">
         <div className="flex items-center gap-2 text-[#1f9d6b]">
           <TrendingUp className="size-4" />
-          <span className="font-display text-lg font-semibold leading-none">+212%</span>
+          <span className="font-display text-lg font-semibold leading-none">Page one</span>
         </div>
-        <span className="mt-1 block text-xs text-ink-soft">organic traffic</span>
+        <span className="mt-1 block text-xs text-ink-soft">found on Google</span>
       </div>
     ),
   },
@@ -74,7 +74,7 @@ const stickers = [
     render: () => (
       <div className="flex items-center gap-2 rounded-xl bg-ink px-3 py-2 text-xs font-medium text-paper shadow-xl">
         <Presentation className="size-4" />
-        Slide 1 / 22
+        Slide 1: the pitch
       </div>
     ),
   },

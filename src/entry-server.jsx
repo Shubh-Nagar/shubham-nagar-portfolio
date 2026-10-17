@@ -4,7 +4,7 @@ import { StaticRouter } from 'react-router-dom'
 import { ThemeProvider } from './hooks/useTheme'
 import App from './App'
 
-export { getRoutes, getRouteMeta, renderHeadTags, SITE_URL } from './lib/seo'
+export { getRoutes, getRouteMeta, getSitemapRoutes, renderHeadTags, SITE_URL } from './lib/seo'
 
 /**
  * Renders the app for one URL to an HTML string. Used only at build time

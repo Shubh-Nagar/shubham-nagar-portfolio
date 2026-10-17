@@ -6,6 +6,7 @@ import { projects, workFilters } from '../data/site'
 import SectionHeading from '../components/ui/SectionHeading'
 import Cover from '../components/ui/Cover'
 import Reveal from '../components/ui/Reveal'
+import Fill from '../components/ui/Fill'
 
 const ease = [0.16, 1, 0.3, 1]
 
@@ -37,22 +38,22 @@ export default function Work() {
         <SectionHeading
           id="work-title"
           title="Selected work"
-          intro="A few recent projects across the five services. Each one started with a free preview."
+          intro="Real projects, from clinic websites to AI tools. Each one: the problem, what I built, and what changed."
         />
 
         {/* Filters */}
         <Reveal delay={0.15} role="group" aria-label="Filter projects" className="mt-12 flex flex-wrap gap-2 md:mt-16">
-          {workFilters.map((f) => {
+          {/* Only categories that have projects get a chip */}
+          {workFilters.filter((f) => counts[f.id]).map((f) => {
             const active = filter === f.id
-            const count = counts[f.id] || 0
+            const count = counts[f.id]
             return (
               <button
                 key={f.id}
                 type="button"
                 onClick={() => setFilter(f.id)}
                 aria-pressed={active}
-                disabled={!count}
-                className={`relative isolate rounded-full border px-4 py-2 text-[0.95rem] transition-colors disabled:opacity-40 ${
+                className={`relative isolate rounded-full border px-4 py-2 text-[0.95rem] transition-colors ${
                   active ? 'border-ink text-paper' : 'border-line text-ink hover:border-ink'
                 }`}
               >
@@ -102,6 +103,7 @@ function ProjectCard({ project, aspect }) {
       <div className="relative">
         <Cover
           src={project.cover}
+          alt={project.cover ? `${project.title} — project screenshot` : project.title}
           className={`rounded-[24px] ${aspect}`}
           imgClassName="group-hover:scale-[1.035]"
           reveal
@@ -122,11 +124,13 @@ function ProjectCard({ project, aspect }) {
             </h3>
             <p className="mt-1 text-ink-soft">{project.categoryLabel}</p>
           </div>
-          <span className="pt-1.5 text-sm tabular-nums text-ink-soft">{project.year}</span>
+          {project.year && <span className="pt-1.5 text-sm tabular-nums text-ink-soft">{project.year}</span>}
         </div>
         <p className="mt-4 flex items-center gap-2.5 text-[0.95rem]">
           <span className="size-1.5 shrink-0 rounded-full bg-marigold" aria-hidden="true" />
-          {project.result}
+          <span>
+            <Fill value={project.result} />
+          </span>
         </p>
       </Reveal>
     </Link>

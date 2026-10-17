@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { Clapperboard, Megaphone, MonitorSmartphone, Plus, Presentation, Search, Check } from 'lucide-react'
-import { services } from '../data/site'
+import { Bot, ChartColumn, Check, Clapperboard, Megaphone, MonitorSmartphone, Plus, Presentation, Search, Workflow } from 'lucide-react'
+import { engineering, services } from '../data/site'
 import SectionHeading from '../components/ui/SectionHeading'
 import { Stagger, StaggerItem } from '../components/ui/Stagger'
+import Reveal from '../components/ui/Reveal'
 
 const icons = {
   web: MonitorSmartphone,
@@ -13,11 +14,18 @@ const icons = {
   social: Megaphone,
 }
 
+const engineeringIcons = {
+  automate: Workflow,
+  dashboards: ChartColumn,
+  ai: Bot,
+}
+
 const ease = [0.16, 1, 0.3, 1]
 
 /**
  * Services as an expanding list rather than a grid of identical cards:
- * one row per service, click to open the detail.
+ * one row per service, click to open the detail. Each row leads with the
+ * business outcome. Below: what the engineering background adds.
  */
 export default function Services() {
   const [openId, setOpenId] = useState(services[0].id)
@@ -27,8 +35,8 @@ export default function Services() {
       <div className="mx-auto max-w-[1320px]">
         <SectionHeading
           id="services-title"
-          title="Five things, done properly."
-          intro="Most clients start with one and add the rest once they've seen the first one work."
+          title="Your whole online presence. One person."
+          intro="Most owners juggle a web agency, an SEO freelancer, a video editor and someone for Instagram. I do all five, so nothing falls through the cracks and you have one number to call."
         />
 
         <Stagger as="ul" stagger={0.07} className="mt-16 border-t border-line md:mt-20">
@@ -103,6 +111,28 @@ export default function Services() {
             )
           })}
         </Stagger>
+
+        {/* What the engineering background adds */}
+        <div className="mt-20 grid gap-10 rounded-[28px] bg-surface p-6 sm:p-10 md:mt-28 lg:grid-cols-12 lg:gap-10">
+          <Reveal className="lg:col-span-4">
+            <h3 className="display text-[clamp(1.9rem,3.6vw,2.8rem)] leading-[1]">{engineering.title}</h3>
+            <p className="mt-4 max-w-sm text-ink-soft">{engineering.intro}</p>
+          </Reveal>
+          <Stagger as="ul" className="grid gap-8 sm:grid-cols-3 lg:col-span-8 lg:gap-6">
+            {engineering.items.map((item) => {
+              const Icon = engineeringIcons[item.icon]
+              return (
+                <StaggerItem as="li" key={item.title}>
+                  <span className="grid size-12 place-items-center rounded-2xl bg-cobalt-soft text-cobalt">
+                    <Icon className="size-5" strokeWidth={1.8} aria-hidden="true" />
+                  </span>
+                  <h4 className="mt-5 font-display text-xl font-semibold tracking-tight">{item.title}</h4>
+                  <p className="mt-2 text-[0.98rem] text-ink-soft">{item.body}</p>
+                </StaggerItem>
+              )
+            })}
+          </Stagger>
+        </div>
       </div>
     </section>
   )

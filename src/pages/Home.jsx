@@ -1,11 +1,13 @@
 import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import Hero from '../sections/Hero'
+import ProofStrip from '../sections/ProofStrip'
 import Work from '../sections/Work'
 import Services from '../sections/Services'
 import About from '../sections/About'
 import Process from '../sections/Process'
 import Testimonials from '../sections/Testimonials'
+import Notes from '../sections/Notes'
 import Contact from '../sections/Contact'
 import { scrollToId } from '../lib/scroll'
 
@@ -26,11 +28,13 @@ export default function Home() {
   return (
     <>
       <Hero />
+      <ProofStrip />
       <Work />
+      <Process />
       <Services />
       <About />
-      <Process />
       <Testimonials />
+      <Notes />
       <Contact />
     </>
   )

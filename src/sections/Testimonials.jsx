@@ -1,9 +1,10 @@
 import { useRef, useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion, useScroll, useTransform } from 'framer-motion'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
-import { testimonials } from '../data/site'
+import { isPlaceholder, testimonials } from '../data/site'
 import Reveal from '../components/ui/Reveal'
 import Blobs from '../components/ui/Blobs'
+import Fill from '../components/ui/Fill'
 
 const ease = [0.16, 1, 0.3, 1]
 
@@ -28,6 +29,9 @@ export default function Testimonials() {
     if (e.key === 'ArrowRight') go(1)
     if (e.key === 'ArrowLeft') go(-1)
   }
+
+  // No testimonials yet → no section
+  if (!total) return null
 
   return (
     <motion.section
@@ -102,7 +106,7 @@ export default function Testimonials() {
                   <span aria-hidden="true" className="text-marigold">
                     “
                   </span>
-                  {t.quote}
+                  <Fill value={t.quote} />
                   <span aria-hidden="true" className="text-marigold">
                     ”
                   </span>
@@ -110,17 +114,23 @@ export default function Testimonials() {
               </blockquote>
               <figcaption className="flex items-center gap-4 md:col-span-10">
                 <span className="grid size-12 place-items-center rounded-full bg-white/10 font-display text-lg font-semibold">
-                  {t.name
-                    .replace('Dr. ', '')
-                    .split(' ')
-                    .map((w) => w[0])
-                    .filter((ch) => /[A-Z]/.test(ch))
-                    .slice(0, 2)
-                    .join('')}
+                  {isPlaceholder(t.name)
+                    ? '?'
+                    : t.name
+                        .replace('Dr. ', '')
+                        .split(' ')
+                        .map((w) => w[0])
+                        .filter((ch) => /[A-Z]/.test(ch))
+                        .slice(0, 2)
+                        .join('')}
                 </span>
                 <span>
-                  <span className="block font-medium">{t.name}</span>
-                  <span className="block text-sm text-white/60">{t.role}</span>
+                  <span className="block font-medium">
+                    <Fill value={t.name} />
+                  </span>
+                  <span className="mt-1 block text-sm text-white/60">
+                    <Fill value={t.role} />
+                  </span>
                 </span>
               </figcaption>
             </motion.figure>
