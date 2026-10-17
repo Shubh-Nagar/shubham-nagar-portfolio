@@ -6,6 +6,7 @@ import { Heart, MousePointer2, Play, Presentation, TrendingUp } from 'lucide-rea
  * Little stickers that bob around the hero preview — one per service.
  * Visitors can grab and fling them anywhere inside the hero; they bounce
  * off its edges and keep floating wherever they land. Purely decorative.
+ * Hidden on phones, where they would cover the preview itself.
  */
 
 const stickers = [
@@ -84,7 +85,7 @@ export default function FloatingStickers({ constraintsRef }) {
   const [played, setPlayed] = useState(false)
 
   return (
-    <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-20">
+    <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-20 hidden sm:block">
       {stickers.map((s, i) => (
         <motion.div
           key={s.id}
@@ -93,6 +94,8 @@ export default function FloatingStickers({ constraintsRef }) {
           dragElastic={0.2}
           dragTransition={{ power: 0.35, timeConstant: 260, bounceStiffness: 320, bounceDamping: 14 }}
           onDragStart={() => setPlayed(true)}
+          // Decorative and pointer-only: keep them out of the keyboard tab order
+          tabIndex={-1}
           initial={{ opacity: 0, scale: 0.4 }}
           animate={{ opacity: 1, scale: 1, transition: { delay: 1.8 + i * 0.12, type: 'spring', stiffness: 260, damping: 16 } }}
           whileHover={{ scale: 1.08 }}

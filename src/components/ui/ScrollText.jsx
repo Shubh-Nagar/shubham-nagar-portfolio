@@ -2,7 +2,7 @@ import { useRef } from 'react'
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion'
 
 /**
- * A paragraph that "reads itself": each word brightens from faint to full
+ * A paragraph that "reads itself": each word darkens from soft to full
  * as the paragraph moves up the viewport. Tied to scroll, so it plays at
  * the visitor's own reading pace.
  */
@@ -28,6 +28,7 @@ export default function ScrollText({ text, className = '' }) {
 }
 
 function Word({ children, progress, range, still }) {
-  const opacity = useTransform(progress, range, [0.18, 1])
+  // 0.62 is the faintest that still passes AA contrast in both themes
+  const opacity = useTransform(progress, range, [0.62, 1])
   return <motion.span style={still ? undefined : { opacity }}>{children}</motion.span>
 }

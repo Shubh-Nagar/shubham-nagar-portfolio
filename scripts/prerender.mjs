@@ -26,13 +26,21 @@ if (!SEO_BLOCK.test(template) || !template.includes('<div id="root"></div>')) {
   throw new Error('index.html is missing the <!-- seo --> block or the empty #root element')
 }
 
+// The stylesheet is small (~12 KB compressed), so it's inlined into every page:
+// the first paint no longer waits for a separate CSS request.
+const STYLESHEET = /<link rel="stylesheet"[^>]*href="(\/assets\/[^"]+\.css)"[^>]*>/
+const cssHref = template.match(STYLESHEET)?.[1]
+if (!cssHref) throw new Error('Could not find the built stylesheet <link> in dist/index.html')
+const css = await readFile(join(dist, cssHref), 'utf8')
+const shell = template.replace(STYLESHEET, () => `<style>${css}</style>`)
+
 const placeholders = new Map() // page → count, reported at the end
 
 async function writePage(url, file) {
   const appHtml = await render(url)
   const found = appHtml.match(/\[PLACEHOLDER/g)
   if (found) placeholders.set(url, found.length)
-  const html = template
+  const html = shell
     .replace(SEO_BLOCK, renderHeadTags(getRouteMeta(url)))
     .replace('<div id="root"></div>', `<div id="root">${appHtml}</div>`)
   await mkdir(dirname(file), { recursive: true })

@@ -92,7 +92,7 @@ export default function ProjectPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, ease, delay: 0.5 }}
         >
-          <Cover src={project.cover} alt={`${project.title} project visual`} eager parallax={6} className="aspect-[4/3] rounded-[28px] md:aspect-[3/2]" />
+          <Cover src={project.cover} alt={`${project.title} project visual`} eager parallax={6} sizes="(min-width: 1360px) 1320px, 100vw" className="aspect-[4/3] rounded-[28px] md:aspect-[3/2]" />
         </motion.div>
 
         {/* Results */}
@@ -131,7 +131,7 @@ export default function ProjectPage() {
             to={`/work/${next.slug}`}
             className="group mt-28 grid items-center gap-8 rounded-[28px] border border-line p-5 transition-colors hover:border-ink sm:p-6 md:mt-36 md:grid-cols-12"
           >
-            <Cover src={next.cover} className="aspect-[4/3] rounded-[20px] md:col-span-4" imgClassName="group-hover:scale-[1.04]" />
+            <Cover src={next.cover} sizes="(min-width: 768px) 30vw, 100vw" className="aspect-[4/3] rounded-[20px] md:col-span-4" imgClassName="group-hover:scale-[1.04]" />
             <div className="md:col-span-7 md:col-start-6">
               <p className="text-ink-soft">Next project</p>
               <p className="display mt-2 text-[clamp(2rem,4.5vw,3.75rem)] leading-[0.95] transition-colors group-hover:text-cobalt">

@@ -3,8 +3,8 @@ import { createRoot, hydrateRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 import { ThemeProvider } from './hooks/useTheme'
 import App from './App'
-// Self-hosted variable fonts (no Google Fonts request needed)
-import '@fontsource-variable/bricolage-grotesque/standard.css'
+// Self-hosted variable fonts (no Google Fonts request needed). The display
+// font is a trimmed copy declared in index.css — see scripts/subset-display-font.py
 import '@fontsource-variable/instrument-sans'
 import './index.css'
 

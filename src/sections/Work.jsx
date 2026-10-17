@@ -108,6 +108,7 @@ function ProjectCard({ project, aspect }) {
           imgClassName="group-hover:scale-[1.035]"
           reveal
           parallax={7}
+          sizes="(min-width: 768px) 55vw, 100vw"
         />
         <span className="absolute bottom-4 left-4 inline-flex translate-y-2 items-center gap-1.5 rounded-full border border-white/30 bg-[#14171f]/55 px-4 py-2 text-sm font-medium text-white opacity-0 backdrop-blur-md transition-all duration-500 ease-out-expo group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100">
           Read the case study

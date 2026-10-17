@@ -11,7 +11,6 @@ import { ChevronsLeftRight } from 'lucide-react'
  * site scales cleanly from phone to desktop.
  */
 
-const ease = [0.16, 1, 0.3, 1]
 const clamp = (v, min, max) => Math.min(max, Math.max(min, v))
 
 export default function PreviewReveal() {
@@ -68,12 +67,7 @@ export default function PreviewReveal() {
   const endDrag = () => (dragging.current = false)
 
   return (
-    <motion.figure
-      className="relative"
-      initial={{ opacity: 0, y: 48 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 1.2, ease, delay: 0.45 }}
-    >
+    <figure className="hero-fade-up relative" style={{ animationDelay: '0.45s', animationDuration: '1.2s', '--rise': '48px' }}>
       {/* Design-canvas dot grid behind the window */}
       <div
         aria-hidden="true"
@@ -157,7 +151,7 @@ export default function PreviewReveal() {
         <span className="mt-[7px] h-px w-6 shrink-0 bg-ink-soft/50" aria-hidden="true" />
         Drag the handle. This is how every project starts: a working preview you can click through before you commit.
       </figcaption>
-    </motion.figure>
+    </figure>
   )
 }
 
@@ -170,7 +164,7 @@ const c = {
   ink: '#0b2b2a',
   teal: '#0e5e59',
   mint: '#cfe9e2',
-  coral: '#ee7b5b',
+  coral: '#c4502f', // deep enough for white text to pass AA contrast
   soft: '#557270',
 }
 

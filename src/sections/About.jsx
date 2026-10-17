@@ -24,6 +24,7 @@ export default function About() {
                 src={profile.photo}
                 alt={`Portrait of ${profile.name}`}
                 className="aspect-[4/5] max-w-sm rounded-[28px]"
+                sizes="(min-width: 1024px) 384px, 100vw"
                 reveal
                 parallax={6}
               />

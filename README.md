@@ -44,7 +44,8 @@ and `npm run build` lists every one still left. Replace them with real content �
 numbers or quotes. Bios and the full pre-launch checklist are in [`BRAND.md`](BRAND.md).
 
 **Images:** your photo goes in `public/me.jpg` (then set `profile.photo: '/me.jpg'`).
-Project screenshots go in `public/work/` (JPG/WebP, ~1600×1200, 4:3) — set each project's `cover`.
+Project screenshots go in `public/work/` (JPG or PNG, at least 1600 px wide, 4:3) — set each project's `cover`,
+e.g. `cover: '/work/pulmonologist-clinic.jpg'`. Optimised WebP versions are generated at build time.
 
 ## Contact form
 
@@ -78,6 +79,8 @@ public/
 scripts/
   prerender.mjs           writes static HTML per route, sitemap.xml, robots.txt
   og-image.mjs            renders og.png and apple-touch-icon.png
+  optimize-images.mjs     WebP versions of screenshots/photo (runs in build)
+  subset-display-font.py  trims the display font
 vercel.json               clean URLs + asset caching for Vercel
 ```
 
@@ -117,6 +120,30 @@ Check a build the way a crawler sees it:
 ```bash
 npm run build && npm run preview
 curl -s http://localhost:4173/work/cleanlabel-ai | grep "<title>"
+```
+
+## Performance
+
+Lighthouse (mobile, simulated slow 4G): **94–95 performance, 100 accessibility, 100 best practices,
+100 SEO** on every page type. (Draft notes score 66 on SEO by design: they're `noindex`.)
+
+What keeps it fast — worth knowing before you change things:
+
+- **Hero entrance is plain CSS** (`.hero-line`, `.hero-fade-up`, `.hero-slide-up` in `index.css`), so the
+  headline and intro paint before JavaScript loads. Don't move them back to Framer Motion `initial` states.
+- **CSS is inlined** into each page by `scripts/prerender.mjs` — no render-blocking stylesheet request.
+- **Display font is trimmed** to the weights, widths and characters the site uses (128 KB → 61 KB):
+  `src/assets/fonts/bricolage-display.woff2`, rebuilt with `python scripts/subset-display-font.py`
+  (needs `pip install fonttools brotli`). Characters outside it fall back to the body font.
+- **Images:** put JPG/PNG screenshots in `public/work/` and your photo at `public/me.jpg`.
+  `npm run build` (or `npm run images`) writes 800 px and 1600 px WebP copies, and `<Cover>` serves the
+  right one for the screen. Use originals of at least 1600 px wide.
+
+Re-check after big changes:
+
+```bash
+npm run build && npx serve dist -l 4174
+npx lighthouse http://localhost:4174 --view   # mobile is the default
 ```
 
 ## Deploying

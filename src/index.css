@@ -1,5 +1,17 @@
 @import "tailwindcss";
 
+/* Display font: a trimmed Bricolage Grotesque (weights 500–600, widths 88–100%,
+   Latin + punctuation) — 61 KB instead of 128 KB. Rebuild with
+   scripts/subset-display-font.py. Missing characters fall back to the body font. */
+@font-face {
+  font-family: "Bricolage Grotesque Variable";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 500 600;
+  font-stretch: 88% 100%;
+  src: url("./assets/fonts/bricolage-display.woff2") format("woff2-variations");
+}
+
 /* Class-based dark mode: <html class="dark"> */
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -149,6 +161,35 @@
   font-stretch: 100%;
   box-decoration-break: clone;
   -webkit-box-decoration-break: clone;
+}
+
+/* Hero entrance — plain CSS so it starts on first paint, before any JavaScript
+   has loaded (keeps Largest Contentful Paint fast). Delays are set inline. */
+@keyframes hero-line {
+  from {
+    transform: translateY(105%);
+  }
+}
+@keyframes hero-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(var(--rise, 16px));
+  }
+}
+@keyframes hero-slide-up {
+  from {
+    transform: translateY(16px);
+  }
+}
+.hero-line {
+  animation: hero-line 1s var(--ease-out-expo) both;
+}
+.hero-fade-up {
+  animation: hero-fade-up 0.9s var(--ease-out-expo) both;
+}
+/* Text that must count as painted immediately moves, but never starts invisible */
+.hero-slide-up {
+  animation: hero-slide-up 0.9s var(--ease-out-expo) both;
 }
 
 /* Compact version for spots set in huge display type (stats) */
