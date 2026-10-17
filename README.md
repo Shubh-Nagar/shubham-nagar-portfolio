@@ -52,6 +52,8 @@ Placeholders to replace before going live:
 ```
 src/
   App.jsx                 routes, page transitions, Lenis smooth scroll
+  entry-server.jsx        renders a route to HTML at build time (prerendering)
+  lib/seo.js              titles, descriptions, canonical URLs, structured data
   index.css               design tokens (light + dark), base styles
   data/site.js            ← all content
   components/
@@ -63,9 +65,13 @@ src/
   hooks/                  theme, active nav section, section scrolling
 public/
   work/*.svg              project cover illustrations
-  .htaccess               SPA routing for Apache/LiteSpeed (Hostinger, cPanel)
-  _redirects              SPA routing for Netlify
-vercel.json               SPA routing for Vercel
+  og.png                  social share image (npm run og)
+  .htaccess               clean URLs + 404 for Apache/LiteSpeed (Hostinger, cPanel)
+  _redirects              404 handling for Netlify
+scripts/
+  prerender.mjs           writes static HTML per route, sitemap.xml, robots.txt
+  og-image.mjs            renders og.png and apple-touch-icon.png
+vercel.json               clean URLs + asset caching for Vercel
 ```
 
 ## Design system
@@ -80,12 +86,42 @@ vercel.json               SPA routing for Vercel
 Colours are CSS variables in `src/index.css`, exposed to Tailwind as `bg-paper`, `text-ink`, `bg-cobalt`, etc.
 Change them there and the whole site (including dark mode) follows.
 
+## SEO & prerendering
+
+`npm run build` does three things:
+
+1. `vite build` — the normal client bundle in `dist/`.
+2. `vite build --ssr src/entry-server.jsx` — a server bundle that can render any route to HTML.
+3. `node scripts/prerender.mjs` — writes real HTML for every route (`dist/index.html`,
+   `dist/work/<slug>.html`, `dist/404.html`) plus `sitemap.xml` and `robots.txt`.
+
+So crawlers, WhatsApp/LinkedIn link previews and visitors without JavaScript all get the actual page
+content; React then attaches to that HTML in the browser (hydration).
+
+| What | Where |
+| --- | --- |
+| Domain used for canonical URLs, sitemap, OG tags | `SITE_URL` in `src/lib/seo.js` |
+| Page titles, descriptions, structured data (Person + ProfessionalService) | `src/lib/seo.js` |
+| Which URLs get prerendered | `getRoutes()` in `src/lib/seo.js` — new projects are picked up automatically |
+| Social share image + home-screen icon | `public/og.png`, `public/apple-touch-icon.png` — regenerate with `npm run og` (needs Chrome or Edge installed) |
+
+Check a build the way a crawler sees it:
+
+```bash
+npm run build && npm run preview
+curl -s http://localhost:4173/work/kaveri-dental | grep "<title>"
+```
+
 ## Deploying
 
-**Vercel / Netlify:** import the repo — build command `npm run build`, output `dist`. Routing configs are included.
+**Vercel (recommended):** import the repo — build command `npm run build`, output `dist`.
+`vercel.json` turns on clean URLs (`/work/slug` → `work/slug.html`) and long-term caching for `/assets`.
+Unknown URLs get the prerendered `404.html` with a real 404 status.
+
+**Netlify:** same build settings; `public/_redirects` sends unknown URLs to `404.html`.
 
 **Hostinger / cPanel:** run `npm run build` and upload the *contents* of `dist/` to `public_html`.
-The included `.htaccess` is copied into `dist/` automatically so `/work/...` URLs survive a refresh.
+The included `.htaccess` maps clean URLs to their `.html` files and serves `404.html` for anything else.
 
 ## Accessibility & motion
 

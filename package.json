@@ -6,8 +6,9 @@
   "description": "Personal portfolio of Shubham Nagar — websites, SEO, presentations, video and social media.",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+    "build": "vite build && vite build --ssr src/entry-server.jsx --outDir dist-ssr && node scripts/prerender.mjs",
+    "preview": "vite preview",
+    "og": "node scripts/og-image.mjs"
   },
   "engines": {
     "node": ">=20"

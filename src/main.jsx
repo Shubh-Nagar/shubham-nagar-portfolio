@@ -1,5 +1,5 @@
 import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
+import { createRoot, hydrateRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 import { ThemeProvider } from './hooks/useTheme'
 import App from './App'
@@ -8,12 +8,18 @@ import '@fontsource-variable/bricolage-grotesque/standard.css'
 import '@fontsource-variable/instrument-sans'
 import './index.css'
 
-createRoot(document.getElementById('root')).render(
+const app = (
   <StrictMode>
     <BrowserRouter>
       <ThemeProvider>
         <App />
       </ThemeProvider>
     </BrowserRouter>
-  </StrictMode>,
+  </StrictMode>
 )
+
+// Production pages arrive prerendered (scripts/prerender.mjs) — attach to that
+// HTML instead of rebuilding it. `npm run dev` serves an empty #root.
+const container = document.getElementById('root')
+if (container.hasChildNodes()) hydrateRoot(container, app)
+else createRoot(container).render(app)

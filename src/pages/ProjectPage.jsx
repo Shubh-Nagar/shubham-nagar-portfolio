@@ -1,4 +1,3 @@
-import { useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { ArrowLeft, ArrowUpRight } from 'lucide-react'
@@ -19,10 +18,6 @@ export default function ProjectPage() {
   const goTo = useGoToSection()
   const index = projects.findIndex((p) => p.slug === slug)
   const project = projects[index]
-
-  useEffect(() => {
-    if (project) document.title = `${project.title} — Shubham Nagar`
-  }, [project])
 
   if (!project) return <NotFound />
 

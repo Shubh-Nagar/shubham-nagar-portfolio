@@ -1,12 +1,7 @@
-import { useEffect } from 'react'
 import { ArrowLeft } from 'lucide-react'
 import Button from '../components/ui/Button'
 
 export default function NotFound() {
-  useEffect(() => {
-    document.title = 'Page not found — Shubham Nagar'
-  }, [])
-
   return (
     <section className="flex min-h-[80vh] items-center px-5 pt-[112px] sm:px-8">
       <div className="mx-auto w-full max-w-[1320px]">

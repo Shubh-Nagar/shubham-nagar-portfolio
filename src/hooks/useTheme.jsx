@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useEffect, useState } from 'react'
+import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react'
 
 /**
  * Theme context — light by default, remembers the visitor's choice.
@@ -16,9 +16,21 @@ function readInitialTheme() {
 }
 
 export function ThemeProvider({ children }) {
-  const [theme, setTheme] = useState(readInitialTheme)
+  // Starts as 'light' everywhere so the prerendered HTML and the first client
+  // render match; the saved choice is picked up right after hydration.
+  const [theme, setTheme] = useState('light')
+  const synced = useRef(false)
 
   useEffect(() => {
+    setTheme(readInitialTheme())
+  }, [])
+
+  useEffect(() => {
+    // Skip the first pass: the inline script in index.html has already applied the saved theme
+    if (!synced.current) {
+      synced.current = true
+      return
+    }
     const root = document.documentElement
     root.classList.toggle('dark', theme === 'dark')
     document.querySelector('meta[name="theme-color"]')?.setAttribute('content', theme === 'dark' ? '#0E1119' : '#F3F4F1')

@@ -1,20 +1,19 @@
 <!doctype html>
-<html lang="en">
+<html lang="en-IN">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Shubham Nagar — Websites, SEO, decks, video & social</title>
-    <meta
-      name="description"
-      content="Shubham Nagar is an independent designer and developer in Indore. Websites, SEO, corporate presentations, video editing and social media — every project starts with a free working preview."
-    />
     <meta name="theme-color" content="#F3F4F1" />
+    <meta name="author" content="Shubham Nagar" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
-    <!-- Open Graph (replace the URL once the site is live) -->
-    <meta property="og:title" content="Shubham Nagar — See it first, then decide" />
-    <meta property="og:description" content="Websites, SEO, presentations, video and social media for businesses that want results." />
-    <meta property="og:type" content="website" />
+    <!-- seo -->
+    <!-- Replaced per page at build time by scripts/prerender.mjs (from src/lib/seo.js).
+         These defaults only show in `npm run dev`. -->
+    <title>Shubham Nagar · Designer & developer in Indore</title>
+    <meta name="description" content="One person for your whole online presence: website, SEO, presentations, video and social. Based in Indore. Every project starts with a free working preview." />
+    <!-- /seo -->
 
     <!-- Apply saved theme before first paint so there is no light/dark flash -->
     <script>
@@ -22,10 +21,20 @@
         if (localStorage.getItem('theme') === 'dark') document.documentElement.classList.add('dark')
       } catch (e) {}
     </script>
+
+    <!-- Without JavaScript, content waiting for its entrance animation is shown straight away.
+         Decorative layers (page curtains, blobs, highlights) are aria-hidden and keep their resting state. -->
+    <noscript>
+      <style>
+        #root [style*="opacity:0"]:not([aria-hidden="true"]) { opacity: 1 !important; }
+        #root [style*="transform"]:not([aria-hidden="true"]) { transform: none !important; }
+        #root [style*="clip-path"]:not([aria-hidden="true"]) { clip-path: none !important; }
+        #root img { opacity: 1 !important; }
+      </style>
+    </noscript>
   </head>
   <body>
     <div id="root"></div>
-    <noscript>This site needs JavaScript. Email hello@shubhamnagar.in to get in touch.</noscript>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

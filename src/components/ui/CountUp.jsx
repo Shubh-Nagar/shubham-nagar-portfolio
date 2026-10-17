@@ -12,7 +12,7 @@ export default function CountUp({ value, className = '' }) {
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: '0px 0px -10% 0px' })
   const reduce = useReducedMotion()
-  const [progress, setProgress] = useState(0)
+  const [progress, setProgress] = useState(null) // null = not started, show the real value
   const countable = !value.includes('→') && /\d/.test(value)
 
   useEffect(() => {
@@ -22,7 +22,7 @@ export default function CountUp({ value, className = '' }) {
   }, [inView, reduce, countable])
 
   const shown =
-    reduce || !countable || progress >= 1
+    reduce || !countable || progress === null || progress >= 1
       ? value
       : value.replace(NUMBER, (match) => {
           const decimals = (match.split('.')[1] || '').length

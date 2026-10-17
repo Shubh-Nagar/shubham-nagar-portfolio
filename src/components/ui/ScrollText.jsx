@@ -12,20 +12,12 @@ export default function ScrollText({ text, className = '' }) {
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start 85%', 'end 55%'] })
   const words = text.split(' ')
 
-  if (reduce) {
-    return (
-      <p ref={ref} className={className}>
-        {text}
-      </p>
-    )
-  }
-
   return (
     <p ref={ref} className={className}>
       <span className="sr-only">{text}</span>
       <span aria-hidden="true">
         {words.map((word, i) => (
-          <Word key={i} progress={scrollYProgress} range={[i / words.length, (i + 1) / words.length]}>
+          <Word key={i} progress={scrollYProgress} range={[i / words.length, (i + 1) / words.length]} still={reduce}>
             {word}
             {i < words.length - 1 && ' '}
           </Word>
@@ -35,7 +27,7 @@ export default function ScrollText({ text, className = '' }) {
   )
 }
 
-function Word({ children, progress, range }) {
+function Word({ children, progress, range, still }) {
   const opacity = useTransform(progress, range, [0.18, 1])
-  return <motion.span style={{ opacity }}>{children}</motion.span>
+  return <motion.span style={still ? undefined : { opacity }}>{children}</motion.span>
 }

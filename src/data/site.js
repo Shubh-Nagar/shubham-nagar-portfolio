@@ -47,7 +47,7 @@ export const about = {
     "I'm an engineer by training, so I care about how things work under the hood. But clients don't buy code. They buy more calls, more bookings and fewer explanations, and that's what I design for.",
   ],
   facts: [
-    { label: 'Currently', value: 'Web developer at Amaltas University' },
+    { label: 'Currently', value: 'Running the websites of a university & healthcare group in MP' },
     { label: 'Based in', value: 'Indore & Dewas, MP' },
     { label: 'Studied', value: 'B.Tech, NMIMS Mumbai' },
     { label: 'Off the clock', value: 'Chess, markets, and rebuilding things that already worked' },

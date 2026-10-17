@@ -12,10 +12,6 @@ import { scrollToId } from '../lib/scroll'
 export default function Home() {
   const location = useLocation()
 
-  useEffect(() => {
-    document.title = 'Shubham Nagar — Websites, SEO, decks, video & social'
-  }, [])
-
   // Arriving from another page with a section to jump to (e.g. "Work" from a case study),
   // or with a #hash in the URL.
   useEffect(() => {

@@ -7,6 +7,7 @@ import Navbar from './components/layout/Navbar'
 import Footer from './components/layout/Footer'
 import ScrollProgress from './components/layout/ScrollProgress'
 import PageTransition from './components/layout/PageTransition'
+import RouteMeta from './components/layout/RouteMeta'
 import Home from './pages/Home'
 import { scrollToTop, setLenis } from './lib/scroll'
 
@@ -44,6 +45,7 @@ export default function App() {
       >
         Skip to content
       </a>
+      <RouteMeta />
       <ScrollProgress />
       <Navbar />
 
