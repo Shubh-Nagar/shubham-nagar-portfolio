@@ -5,6 +5,7 @@
   "type": "module",
   "description": "Personal portfolio of Shubham Nagar — websites, SEO, presentations, video and social media.",
   "scripts": {
+    "predev": "node scripts/optimize-images.mjs",
     "dev": "vite",
     "build": "node scripts/optimize-images.mjs && vite build && vite build --ssr src/entry-server.jsx --outDir dist-ssr && node scripts/prerender.mjs",
     "preview": "vite preview",

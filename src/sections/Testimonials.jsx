@@ -113,24 +113,17 @@ export default function Testimonials() {
                 </p>
               </blockquote>
               <figcaption className="flex items-center gap-4 md:col-span-10">
+                {/* Clients are credited by designation only, so the badge shows its first letter */}
                 <span className="grid size-12 place-items-center rounded-full bg-white/10 font-display text-lg font-semibold">
-                  {isPlaceholder(t.name)
-                    ? '?'
-                    : t.name
-                        .replace('Dr. ', '')
-                        .split(' ')
-                        .map((w) => w[0])
-                        .filter((ch) => /[A-Z]/.test(ch))
-                        .slice(0, 2)
-                        .join('')}
+                  {isPlaceholder(t.role) ? '?' : t.role[0]}
                 </span>
                 <span>
                   <span className="block font-medium">
-                    <Fill value={t.name} />
+                    <Fill value={t.role.split(', ')[0]} />
                   </span>
-                  <span className="mt-1 block text-sm text-white/60">
-                    <Fill value={t.role} />
-                  </span>
+                  {t.role.includes(', ') && (
+                    <span className="mt-1 block text-sm text-white/60">{t.role.split(', ').slice(1).join(', ')}</span>
+                  )}
                 </span>
               </figcaption>
             </motion.figure>

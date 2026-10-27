@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { animate, motion, useReducedMotion, useSpring } from 'framer-motion'
 import { ChevronsLeftRight } from 'lucide-react'
+import Presenter from './Presenter'
 
 /**
  * The signature hero piece: a browser window showing the same page twice —
@@ -15,6 +16,7 @@ const clamp = (v, min, max) => Math.min(max, Math.max(min, v))
 
 export default function PreviewReveal() {
   const [pos, setPos] = useState(4)
+  const [played, setPlayed] = useState(false)
   const reduce = useReducedMotion()
   const areaRef = useRef(null)
   const dragging = useRef(false)
@@ -58,6 +60,7 @@ export default function PreviewReveal() {
   const onPointerDown = (e) => {
     if (e.pointerType !== 'mouse' && !e.target.closest('[data-handle]')) return
     touched.current = true
+    setPlayed(true)
     dragging.current = true
     resetTilt()
     e.currentTarget.setPointerCapture(e.pointerId)
@@ -138,6 +141,7 @@ export default function PreviewReveal() {
               value={Math.round(pos)}
               onChange={(e) => {
                 touched.current = true
+                setPlayed(true)
                 setPos(Number(e.target.value))
               }}
               className="peer sr-only"
@@ -147,9 +151,13 @@ export default function PreviewReveal() {
         </motion.div>
       </div>
 
-      <figcaption className="relative mt-5 flex items-start gap-3 text-sm text-ink-soft">
-        <span className="mt-[7px] h-px w-6 shrink-0 bg-ink-soft/50" aria-hidden="true" />
-        Drag the handle. This is how every project starts: a working preview you can click through before you commit.
+      {/* The presenter points up at the preview and "says" the caption */}
+      <figcaption className="relative z-10 -mt-7 flex items-end gap-1 pl-1 text-sm text-ink-soft sm:-mt-9">
+        <Presenter pos={pos} played={played} />
+        <span className="relative mb-3 rounded-2xl rounded-bl-md border border-line bg-surface px-4 py-3 leading-relaxed shadow-[0_14px_30px_-18px_rgba(20,23,31,.35)]">
+          <span aria-hidden="true" className="absolute -left-[7px] bottom-3 size-3 rotate-45 border-b border-l border-line bg-surface" />
+          Drag the handle. This is how every project starts: a working preview you can click through before you commit.
+        </span>
       </figcaption>
     </figure>
   )

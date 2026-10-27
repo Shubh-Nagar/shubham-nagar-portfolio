@@ -1,11 +1,12 @@
-import { useState } from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
-import { Bot, ChartColumn, Check, Clapperboard, Megaphone, MonitorSmartphone, Plus, Presentation, Search, Workflow } from 'lucide-react'
+import { useRef, useState } from 'react'
+import { AnimatePresence, motion, useMotionValueEvent, useReducedMotion, useScroll } from 'framer-motion'
+import { Bot, ChartColumn, Check, Clapperboard, Megaphone, MonitorSmartphone, Presentation, Search, Workflow } from 'lucide-react'
 import { engineering, services } from '../data/site'
 import SectionHeading from '../components/ui/SectionHeading'
 import { Stagger, StaggerItem } from '../components/ui/Stagger'
 import Reveal from '../components/ui/Reveal'
 import ServiceVisual from '../components/services/ServiceVisual'
+import ServiceBackdrop from '../components/services/ServiceBackdrop'
 
 const icons = {
   web: MonitorSmartphone,
@@ -23,17 +24,36 @@ const engineeringIcons = {
 
 const ease = [0.16, 1, 0.3, 1]
 
+const fadeEnds = 'linear-gradient(transparent, #000 18vh, #000 calc(100% - 30vh), transparent)'
+
+// The pinned picture leaves upward and the next one rises from below
+// (reversed when scrolling back up)
+const slide = {
+  enter: (dir) => ({ y: dir > 0 ? '100%' : '-100%', opacity: 0.4, scale: 0.94 }),
+  center: { y: '0%', opacity: 1, scale: 1 },
+  exit: (dir) => ({ y: dir > 0 ? '-100%' : '100%', opacity: 0.4, scale: 0.94 }),
+}
+
 /**
- * Services as an expanding list rather than a grid of identical cards:
- * one row per service, click to open the detail. Each row leads with the
- * business outcome; the open row adds a picture of the service.
+ * Services as a scroll story: on desktop the text for each service scrolls
+ * past on the left while a pinned panel on the right swaps its picture
+ * upward to match. On smaller screens each service stacks with its picture.
  * Below: what the engineering background adds.
  */
 export default function Services() {
-  const [openId, setOpenId] = useState(services[0].id)
+  const [[active, direction], setActive] = useState([0, 1])
+  const listRef = useRef(null)
+  const reduce = useReducedMotion()
+
+  // Whichever service's slice of the list is crossing the middle of the screen
+  const { scrollYProgress } = useScroll({ target: listRef, offset: ['start center', 'end center'] })
+  useMotionValueEvent(scrollYProgress, 'change', (v) => {
+    const next = Math.min(services.length - 1, Math.max(0, Math.floor(v * services.length)))
+    setActive(([prev, dir]) => (next === prev ? [prev, dir] : [next, next > prev ? 1 : -1]))
+  })
 
   return (
-    <section id="services" aria-labelledby="services-title" className="bg-paper-2 px-5 py-24 sm:px-8 md:py-36">
+    <section id="services" aria-labelledby="services-title" className="relative isolate overflow-x-clip bg-paper-2 px-5 py-24 sm:px-8 md:py-36">
       <div className="mx-auto max-w-[1320px]">
         <SectionHeading
           id="services-title"
@@ -41,81 +61,98 @@ export default function Services() {
           intro="Most owners juggle a web agency, an SEO freelancer, a video editor and someone for Instagram. I do all five, so nothing falls through the cracks and you have one number to call."
         />
 
-        <Stagger as="ul" stagger={0.07} className="mt-16 border-t border-line md:mt-20">
-          {services.map((service) => {
-            const Icon = icons[service.icon]
-            const open = openId === service.id
-            return (
-              <StaggerItem as="li" key={service.id} className="border-b border-line">
-                <h3>
-                  <button
-                    type="button"
-                    onClick={() => setOpenId(open ? null : service.id)}
-                    aria-expanded={open}
-                    aria-controls={`service-${service.id}`}
-                    className="group grid w-full grid-cols-[auto_1fr_auto] items-center gap-5 py-7 text-left md:grid-cols-[auto_minmax(0,5fr)_minmax(0,4fr)_auto] md:gap-8 md:py-9"
-                  >
+        <div ref={listRef} className="relative mt-16 md:mt-20 lg:grid lg:grid-cols-12 lg:gap-12">
+          {/* Full-width scene behind the story, pinned while it scrolls */}
+          <div
+            className="pointer-events-none absolute inset-y-0 left-1/2 -z-10 w-screen -translate-x-1/2"
+            // Fade in/out at the story's ends instead of a hard edge
+            style={{ maskImage: fadeEnds, WebkitMaskImage: fadeEnds }}
+          >
+            <ServiceBackdrop id={services[active].id} direction={direction} />
+          </div>
+
+          {/* Text: scrolls normally; the one passing the middle of the screen is "active" */}
+          <ol className="lg:col-span-6">
+            {services.map((service, i) => {
+              const Icon = icons[service.icon]
+              const isActive = active === i
+              return (
+                <li
+                  key={service.id}
+                  className={`border-t border-line py-12 transition-opacity duration-500 first:border-t-0 lg:flex lg:min-h-[78vh] lg:flex-col lg:justify-center lg:border-t-0 lg:py-0 ${
+                    isActive ? 'lg:opacity-100' : 'lg:opacity-25'
+                  }`}
+                >
+                  <div className="flex items-center gap-4">
                     <span
-                      className={`grid size-12 place-items-center rounded-2xl transition-colors duration-300 md:size-14 ${
-                        open ? 'bg-cobalt text-on-cobalt' : 'bg-surface text-ink group-hover:text-cobalt'
+                      className={`grid size-12 place-items-center rounded-2xl transition-colors duration-500 md:size-14 ${
+                        isActive ? 'bg-cobalt text-on-cobalt' : 'bg-surface text-ink'
                       }`}
                     >
                       <Icon className="size-5 md:size-6" strokeWidth={1.7} aria-hidden="true" />
                     </span>
-                    <span className="font-display text-[1.6rem] font-semibold leading-tight tracking-tight transition-transform duration-500 ease-out-expo group-hover:translate-x-1 md:text-[2.4rem]">
-                      {service.title}
+                    <span className="font-display text-sm font-semibold tabular-nums text-ink-soft">
+                      {String(i + 1).padStart(2, '0')} / {String(services.length).padStart(2, '0')}
                     </span>
-                    <span className="hidden font-sans text-base font-normal tracking-normal text-ink-soft md:block">{service.short}</span>
-                    <span
-                      className={`grid size-11 place-items-center rounded-full border transition-[transform,background-color,border-color] duration-500 ease-out-expo ${
-                        open ? 'rotate-45 border-ink bg-ink text-paper' : 'border-line group-hover:border-ink'
-                      }`}
-                      aria-hidden="true"
-                    >
-                      <Plus className="size-5" />
-                    </span>
-                  </button>
-                </h3>
+                  </div>
+                  <h3 className="mt-6 font-display text-[2rem] font-semibold leading-[1.05] tracking-tight md:text-[2.8rem]">{service.title}</h3>
+                  <p className="mt-3 text-lg text-cobalt">{service.short}</p>
+                  <p className="mt-5 max-w-xl text-lg leading-relaxed text-ink-soft">{service.description}</p>
+                  <ul className="mt-7 grid gap-3 sm:grid-cols-2">
+                    {service.deliverables.map((d) => (
+                      <li key={d} className="flex items-start gap-3">
+                        <Check className="mt-1 size-4 shrink-0 text-cobalt" aria-hidden="true" />
+                        <span>{d}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <p className="mt-7 text-sm text-ink-soft">
+                    Typical timeline: <span className="text-ink">{service.timeline}</span>
+                  </p>
 
-                <AnimatePresence initial={false}>
-                  {open && (
-                    <motion.div
-                      id={`service-${service.id}`}
-                      role="region"
-                      key="content"
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: 'auto', opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.55, ease }}
-                      className="overflow-hidden"
-                    >
-                      <div className="grid gap-8 pb-10 md:grid-cols-[3.5rem_minmax(0,5fr)_minmax(0,4fr)_2.75rem] md:gap-8">
-                        <div className="md:col-start-2">
-                          <p className="text-ink-soft md:hidden">{service.short}</p>
-                          <p className="mt-4 max-w-xl text-lg leading-relaxed md:mt-0">{service.description}</p>
-                          <ul className="mt-7 grid gap-3 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2">
-                            {service.deliverables.map((d) => (
-                              <li key={d} className="flex items-start gap-3">
-                                <Check className="mt-1 size-4 shrink-0 text-cobalt" aria-hidden="true" />
-                                <span>{d}</span>
-                              </li>
-                            ))}
-                          </ul>
-                          <p className="mt-7 text-sm text-ink-soft">
-                            Typical timeline: <span className="text-ink">{service.timeline}</span>
-                          </p>
-                        </div>
-                        <div className="md:col-span-2 md:col-start-3">
-                          <ServiceVisual id={service.id} />
-                        </div>
-                      </div>
-                    </motion.div>
-                  )}
+                  {/* Phones and tablets: the picture sits under its text */}
+                  <Reveal className="mt-10 lg:hidden">
+                    <ServiceVisual id={service.id} />
+                  </Reveal>
+                </li>
+              )
+            })}
+          </ol>
+
+          {/* Desktop: a pinned panel whose picture slides up to the next service */}
+          <div className="hidden lg:col-span-6 lg:block">
+            <div className="sticky top-[14vh] h-[72vh]">
+              <div className="relative h-full overflow-hidden rounded-[28px]">
+                <AnimatePresence initial={false} custom={direction}>
+                  <motion.div
+                    key={active}
+                    custom={direction}
+                    variants={slide}
+                    initial="enter"
+                    animate="center"
+                    exit="exit"
+                    transition={{ duration: reduce ? 0 : 0.8, ease }}
+                    className="absolute inset-0 flex items-center"
+                  >
+                    <div className="w-full">
+                      <ServiceVisual id={services[active].id} />
+                    </div>
+                  </motion.div>
                 </AnimatePresence>
-              </StaggerItem>
-            )
-          })}
-        </Stagger>
+              </div>
+
+              {/* Progress rail */}
+              <div className="absolute -right-6 top-1/2 flex -translate-y-1/2 flex-col gap-2" aria-hidden="true">
+                {services.map((s, i) => (
+                  <span
+                    key={s.id}
+                    className={`w-1 rounded-full transition-all duration-500 ${i === active ? 'h-10 bg-cobalt' : 'h-4 bg-line'}`}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
 
         {/* What the engineering background adds */}
         <div className="mt-20 grid gap-10 rounded-[28px] bg-surface p-6 sm:p-10 md:mt-28 lg:grid-cols-12 lg:gap-10">

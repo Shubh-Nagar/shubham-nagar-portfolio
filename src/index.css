@@ -192,6 +192,53 @@
   animation: hero-slide-up 0.9s var(--ease-out-expo) both;
 }
 
+/* Hero presenter — idle point, head tilt and blink (static with reduced motion) */
+.presenter-point,
+.presenter-head,
+.presenter-blink {
+  transform-box: view-box;
+}
+.presenter-point {
+  transform-origin: 82px 110px;
+  animation: presenter-point 2.4s ease-in-out infinite;
+}
+.presenter-head {
+  transform-origin: 60px 86px;
+  animation: presenter-head 4.8s ease-in-out infinite;
+}
+.presenter-blink {
+  transform-origin: 60px 63px;
+  animation: presenter-blink 4.2s ease-in-out infinite;
+}
+@keyframes presenter-point {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(-7deg) translateY(-2px);
+  }
+}
+@keyframes presenter-head {
+  0%,
+  100% {
+    transform: rotate(3deg);
+  }
+  50% {
+    transform: rotate(7deg);
+  }
+}
+@keyframes presenter-blink {
+  0%,
+  92%,
+  100% {
+    transform: scaleY(1);
+  }
+  95% {
+    transform: scaleY(0.1);
+  }
+}
+
 /* Compact version for spots set in huge display type (stats) */
 .placeholder.placeholder-sm {
   display: inline-block;

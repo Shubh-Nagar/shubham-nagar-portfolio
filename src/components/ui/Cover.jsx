@@ -22,6 +22,9 @@ const ease = [0.16, 1, 0.3, 1]
 export default function Cover({ src, alt = '', className = '', imgClassName = '', eager = false, reveal = false, parallax = 0, scroll = false, sizes = '100vw' }) {
   const [loaded, setLoaded] = useState(false)
   const [glide, setGlide] = useState(6)
+  // The WebP copies only exist after scripts/optimize-images.mjs has run;
+  // if one is missing, drop the <source> so the original file loads instead
+  const [webpMissing, setWebpMissing] = useState(false)
   const imgRef = useRef(null)
   const frameRef = useRef(null)
   const reduce = useReducedMotion()
@@ -84,7 +87,7 @@ export default function Cover({ src, alt = '', className = '', imgClassName = ''
           variants={{ hidden: { scale: 1.18 }, show: { scale: 1, transition: { duration: 1.4, ease } } }}
         >
           <picture>
-            {responsive && <source type="image/webp" srcSet={responsive} sizes={sizes} />}
+            {responsive && !webpMissing && <source type="image/webp" srcSet={responsive} sizes={sizes} />}
             <img
               ref={imgRef}
               src={src}
@@ -94,6 +97,7 @@ export default function Cover({ src, alt = '', className = '', imgClassName = ''
               {...(eager && { fetchpriority: 'high' })}
               decoding="async"
               onLoad={onLoad}
+              onError={() => responsive && setWebpMissing(true)}
               style={scroll ? { '--glide': `${glide}s` } : undefined}
               className={`size-full object-cover ${
                 scroll

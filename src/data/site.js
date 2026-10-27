@@ -393,10 +393,40 @@ export const process = [
 ]
 
 // Replace with real quotes (with the client's permission). Delete any you don't have.
-export const testimonials = [
-  { quote: ph('a real quote from a client'), name: ph('client name'), role: ph('role, business') },
-  { quote: ph('a real quote from a client'), name: ph('client name'), role: ph('role, business') },
+/**
+ * Shown by designation only — no client names.
+ *
+ * These are drafts for each client to edit and approve. Only entries with
+ * `approved: true` appear on the site: once a client says yes (with their
+ * final wording), update the quote and flip the flag. Delete any they decline.
+ */
+const allTestimonials = [
+  {
+    approved: false,
+    quote:
+      'I wanted a site that felt calm, not like another hospital ad. Shubham showed me a working preview before I paid anything, and patients now mention the breathing animation at the front desk.',
+    role: 'Pulmonologist, Indore',
+  },
+  {
+    approved: false,
+    quote:
+      'Patients used to call just to ask our timings and prices. Now they see everything on the site and book on WhatsApp. Seeing the full site before deciding made it an easy yes.',
+    role: 'Dentist, Indore',
+  },
+  {
+    approved: false,
+    quote:
+      'Schedule, faculty and registration were all in one place, and changes went live the same day. One person handled what we expected to need a whole agency for.',
+    role: 'Organising committee, national medical conference',
+  },
+  {
+    approved: false,
+    quote: 'The deck finally told our story in the order a client thinks: problem, proof, price. We used it in our next pitch meetings.',
+    role: 'Founder, events company',
+  },
 ]
+
+export const testimonials = allTestimonials.filter((t) => t.approved)
 
 export const budgets = ['Under ₹25k', '₹25k–60k', '₹60k–1.5L', '₹1.5L+', 'Not sure yet']
 
