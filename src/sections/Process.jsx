@@ -1,5 +1,6 @@
 import { useRef } from 'react'
 import { motion, useScroll, useSpring, useTransform } from 'framer-motion'
+import { MonitorSmartphone, PhoneCall, Rocket, UsersRound } from 'lucide-react'
 import { process } from '../data/site'
 import SectionHeading from '../components/ui/SectionHeading'
 import Reveal from '../components/ui/Reveal'
@@ -25,11 +26,11 @@ export default function Process() {
 
         <ol ref={listRef} className="relative mt-16 grid gap-12 md:mt-24 lg:grid-cols-4 lg:gap-10">
           {/* Track + drawn line — desktop */}
-          <div aria-hidden="true" className="absolute left-[22px] right-0 top-[22px] hidden h-px bg-line lg:block">
+          <div aria-hidden="true" className="absolute left-[32px] right-0 top-[32px] hidden h-px bg-line lg:block">
             <motion.div className="h-full origin-left bg-cobalt" style={{ scaleX: progress }} />
           </div>
           {/* Track + drawn line — mobile */}
-          <div aria-hidden="true" className="absolute bottom-0 left-[22px] top-[22px] w-px bg-line lg:hidden">
+          <div aria-hidden="true" className="absolute bottom-0 left-[32px] top-[32px] w-px bg-line lg:hidden">
             <motion.div className="h-full w-full origin-top bg-cobalt" style={{ scaleY: progress }} />
           </div>
 
@@ -42,16 +43,20 @@ export default function Process() {
   )
 }
 
+// One icon per step, in the same order as `process` in data/site.js
+const stepIcons = [PhoneCall, MonitorSmartphone, UsersRound, Rocket]
+
 function Step({ step, index, total, progress }) {
+  const Icon = stepIcons[index]
   // Steps sit at roughly even intervals along the line
   const at = index / total
   const lit = useTransform(progress, [at, at + 0.06], [0, 1])
   const numberColor = useTransform(lit, (v) => (v > 0.5 ? 'var(--on-cobalt)' : 'var(--ink)'))
 
   return (
-    <Reveal as="li" delay={index * 0.08} className="relative grid grid-cols-[44px_1fr] gap-6 lg:block">
+    <Reveal as="li" delay={index * 0.08} className="relative grid grid-cols-[64px_1fr] gap-6 lg:block">
       <span
-        className={`relative z-10 grid size-11 place-items-center rounded-full border font-display text-lg font-semibold ${
+        className={`relative z-10 grid size-16 place-items-center rounded-full border font-display text-lg font-semibold ${
           step.highlight ? 'border-marigold bg-marigold text-[#14171f]' : 'border-line bg-paper text-ink'
         }`}
       >
@@ -63,11 +68,12 @@ function Step({ step, index, total, progress }) {
           />
         )}
         <motion.span className="relative" style={step.highlight ? undefined : { color: numberColor }}>
-          {index + 1}
+          {Icon ? <Icon aria-hidden="true" className="size-8" strokeWidth={1.75} /> : index + 1}
         </motion.span>
       </span>
       <div className="lg:mt-8 lg:pr-4">
-        <h3 className="font-display text-2xl font-semibold tracking-tight md:text-[1.75rem]">{step.title}</h3>
+        <p className="text-sm font-medium text-ink-soft">Step {index + 1}</p>
+        <h3 className="mt-1 font-display text-2xl font-semibold tracking-tight md:text-[1.75rem]">{step.title}</h3>
         <p className="mt-3 max-w-sm text-ink-soft">{step.body}</p>
       </div>
     </Reveal>

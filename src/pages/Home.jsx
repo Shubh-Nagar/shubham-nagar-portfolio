@@ -28,9 +28,9 @@ export default function Home() {
   return (
     <>
       <Hero />
-      <ProofStrip />
       <Work />
       <Process />
+      <ProofStrip />
       <Services />
       <About />
       <Testimonials />

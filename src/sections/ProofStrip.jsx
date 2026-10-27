@@ -1,50 +1,78 @@
-import { proof } from '../data/site'
-import Fill from '../components/ui/Fill'
-import { Stagger, StaggerItem } from '../components/ui/Stagger'
+import { Phone } from 'lucide-react'
+import { previewMessage, profile, whatsappLink } from '../data/site'
+import Button from '../components/ui/Button'
+import { SocialIcon } from '../components/ui/Brand'
+import Reveal from '../components/ui/Reveal'
 
 /**
- * Quick proof right under the hero: who the work is for, three facts,
- * and a slow marquee of what it's built with.
+ * A single question to the visitor after "How it works": a cobalt card
+ * with a real client site rising out of its top edge, and the
+ * free-preview and call buttons beside it.
  */
 export default function ProofStrip() {
   return (
-    <section aria-label="Who I work with" className="border-y border-line bg-paper-2">
-      <div className="mx-auto grid max-w-[1320px] gap-10 px-5 py-12 sm:px-8 md:py-14 lg:grid-cols-12 lg:items-center lg:gap-10">
-        <div className="lg:col-span-6">
-          <p className="text-sm text-ink-soft">Built for</p>
-          <Stagger as="ul" stagger={0.05} className="mt-3 flex flex-wrap gap-2">
-            {proof.sectors.map((s) => (
-              <StaggerItem as="li" key={s} y={10} className="rounded-full border border-line bg-surface px-3.5 py-1.5 text-[0.95rem]">
-                {s}
-              </StaggerItem>
-            ))}
-          </Stagger>
-        </div>
+    <section
+      aria-labelledby="preview-question"
+      className="relative px-5 pb-20 pt-28 sm:px-8 md:pb-28 md:pt-36"
+      style={{ background: 'linear-gradient(180deg, var(--paper) 0 45%, var(--paper-2) 45% 100%)' }}
+    >
+      <Reveal className="relative mx-auto max-w-[1180px]">
+        <div className="relative grid overflow-visible rounded-[2rem] bg-cobalt text-on-cobalt shadow-[0_30px_60px_-30px_rgba(20,23,31,0.45)] md:grid-cols-12">
+          {/* Decorative shapes, clipped to the card */}
+          <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden rounded-[2rem]">
+            <div className="absolute -left-16 top-10 size-[26rem] rounded-full bg-white/10" />
+            <div className="absolute -right-24 -top-24 size-72 rounded-full bg-white/10" />
+            <div className="absolute bottom-8 right-10 hidden size-24 rounded-3xl border-[10px] border-white/10 md:block" />
+          </div>
 
-        <Stagger as="dl" stagger={0.1} className="grid grid-cols-3 gap-4 lg:col-span-6 lg:gap-8">
-          {proof.stats.map((s) => (
-            <StaggerItem key={s.label} className="flex flex-col-reverse gap-1.5">
-              <dt className="text-sm leading-snug text-ink-soft">{s.label}</dt>
-              <dd className="display text-[clamp(2rem,4.5vw,3.25rem)] leading-none text-cobalt">
-                <Fill value={s.value} className="placeholder-sm" />
-              </dd>
-            </StaggerItem>
-          ))}
-        </Stagger>
-      </div>
+          {/* Site preview that breaks out of the top of the card */}
+          <div className="relative px-6 pt-8 md:col-span-6 md:px-10 md:pt-0">
+            <div className="relative mx-auto max-w-md md:-mt-20 md:mb-0">
+              <div className="overflow-hidden rounded-t-2xl border border-white/20 bg-white shadow-2xl md:rounded-2xl md:rounded-b-none">
+                <div className="flex items-center gap-1.5 border-b border-black/10 bg-[#f3f4f8] px-4 py-2.5" aria-hidden="true">
+                  <span className="size-2.5 rounded-full bg-[#ff5f57]" />
+                  <span className="size-2.5 rounded-full bg-[#febc2e]" />
+                  <span className="size-2.5 rounded-full bg-[#28c840]" />
+                  <span className="ml-3 truncate rounded-md bg-white px-3 py-0.5 text-xs text-[#5b6070]">yourclinic.in</span>
+                </div>
+                <img
+                  src="/work/dental-clinic-800.webp"
+                  alt="Preview of a dental clinic website built by Shubham"
+                  width="800"
+                  height="4946"
+                  loading="lazy"
+                  className="h-64 w-full object-cover object-top sm:h-80 md:h-[22rem]"
+                />
+              </div>
+            </div>
+          </div>
 
-      {/* Tools — decorative motion, the list itself is readable once */}
-      <div className="relative overflow-hidden border-t border-line py-5" style={{ maskImage: 'linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent)', WebkitMaskImage: 'linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent)' }}>
-        <p className="sr-only">Tools I work with: {proof.tools.join(', ')}</p>
-        <div className="marquee flex w-max gap-10 pr-10" aria-hidden="true">
-          {[...proof.tools, ...proof.tools].map((tool, i) => (
-            <span key={i} className="flex items-center gap-10 whitespace-nowrap font-display text-lg font-medium text-ink-soft">
-              {tool}
-              <span className="size-1.5 rounded-full bg-marigold" />
-            </span>
-          ))}
+          {/* Copy + actions */}
+          <div className="relative px-6 py-10 sm:px-10 md:col-span-6 md:py-16 md:pl-4 md:pr-14">
+            <h2 id="preview-question" className="display text-[clamp(2rem,4vw,3.25rem)] leading-[1.02]">
+              Want to see your new website before you pay a rupee?
+            </h2>
+            <p className="mt-5 max-w-md text-lg leading-relaxed opacity-85">
+              Tell me about your business and I'll build a working preview of your site. Pay only once you like it.
+            </p>
+            <div className="mt-8 flex flex-wrap items-center gap-x-7 gap-y-4">
+              <Button variant="light" size="lg" href={whatsappLink(previewMessage)} target="_blank" rel="noreferrer">
+                <span className="inline-flex items-center gap-2.5">
+                  <SocialIcon name="whatsapp" className="size-5" />
+                  Get your free preview
+                </span>
+              </Button>
+              <a
+                href={`tel:${profile.phone.replace(/\s/g, '')}`}
+                className="inline-flex items-center gap-2.5 font-medium underline-offset-4 hover:underline"
+              >
+                <Phone aria-hidden="true" className="size-5" strokeWidth={2} />
+                {profile.phone}
+              </a>
+            </div>
+          </div>
         </div>
-      </div>
+      </Reveal>
     </section>
   )
 }
