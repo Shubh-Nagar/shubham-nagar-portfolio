@@ -10,22 +10,33 @@ const ease = [0.16, 1, 0.3, 1]
  * `reveal`   opens the frame from the centre (and settles the zoom) the first
  *            time it scrolls into view. Meant for 24–28px rounded frames.
  * `parallax` lets the picture drift slower than the page, in % of its height.
+ * `scroll`   for full-page screenshots: shows the top of the page, and glides
+ *            down to the bottom while the card (a `group`) is hovered or
+ *            focused. Taller pages scroll for longer, so the pace stays even.
  * Without a `src` it shows a neutral placeholder panel until a real screenshot is added.
  *
  * JPG/PNG sources are served as WebP at 800/1600 px (made by
  * scripts/optimize-images.mjs at build time); `sizes` tells the browser how
  * wide the image will be shown so a phone downloads the small one.
  */
-export default function Cover({ src, alt = '', className = '', imgClassName = '', eager = false, reveal = false, parallax = 0, sizes = '100vw' }) {
+export default function Cover({ src, alt = '', className = '', imgClassName = '', eager = false, reveal = false, parallax = 0, scroll = false, sizes = '100vw' }) {
   const [loaded, setLoaded] = useState(false)
+  const [glide, setGlide] = useState(6)
   const imgRef = useRef(null)
   const frameRef = useRef(null)
   const reduce = useReducedMotion()
 
   // Cached images can finish before React attaches onLoad
   useEffect(() => {
-    if (imgRef.current?.complete) setLoaded(true)
+    if (imgRef.current?.complete) onLoad()
   }, [src])
+
+  // ~1.1s per screen of page height, measured from the image itself
+  function onLoad() {
+    setLoaded(true)
+    const img = imgRef.current
+    if (scroll && img?.naturalWidth) setGlide(Math.min(12, Math.max(2.5, (img.naturalHeight / img.naturalWidth) * 1.1)))
+  }
 
   // The image layer is oversized by `parallax`% top and bottom, so it never travels past its edges
   const { scrollYProgress } = useScroll({ target: frameRef, offset: ['start end', 'end start'] })
@@ -82,10 +93,13 @@ export default function Cover({ src, alt = '', className = '', imgClassName = ''
               // lowercase: React 18 passes it straight through as the HTML attribute
               {...(eager && { fetchpriority: 'high' })}
               decoding="async"
-              onLoad={() => setLoaded(true)}
-              className={`size-full object-cover transition-[opacity,transform] duration-700 ease-out-expo ${
-                loaded ? 'opacity-100' : 'opacity-0'
-              } ${imgClassName}`}
+              onLoad={onLoad}
+              style={scroll ? { '--glide': `${glide}s` } : undefined}
+              className={`size-full object-cover ${
+                scroll
+                  ? 'object-top transition-[opacity,object-position] duration-700 ease-in-out motion-safe:group-hover:object-bottom motion-safe:group-hover:duration-(--glide) motion-safe:group-focus-visible:object-bottom motion-safe:group-focus-visible:duration-(--glide)'
+                  : 'transition-[opacity,transform] duration-700 ease-out-expo'
+              } ${loaded ? 'opacity-100' : 'opacity-0'} ${imgClassName}`}
             />
           </picture>
         </motion.div>

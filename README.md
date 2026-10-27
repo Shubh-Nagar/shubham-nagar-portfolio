@@ -44,8 +44,10 @@ and `npm run build` lists every one still left. Replace them with real content �
 numbers or quotes. Bios and the full pre-launch checklist are in [`BRAND.md`](BRAND.md).
 
 **Images:** your photo goes in `public/me.jpg` (then set `profile.photo: '/me.jpg'`).
-Project screenshots go in `public/work/` (JPG or PNG, at least 1600 px wide, 4:3) — set each project's `cover`,
-e.g. `cover: '/work/pulmonologist-clinic.jpg'`. Optimised WebP versions are generated at build time.
+Project screenshots go in `public/work/` as **full-page** captures (JPG or PNG, 1440 px wide, any height) — set
+each project's `cover`, e.g. `cover: '/work/pulmonologist-clinic.jpg'`. Cards show the top of the page and scroll
+down to the bottom on hover. Projects marked `coverIsMockup: true` use an illustrative stand-in; swap in a real
+screenshot and drop the flag. Optimised WebP versions are generated at build time.
 
 ## Contact form
 

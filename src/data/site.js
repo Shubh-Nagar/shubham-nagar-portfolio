@@ -191,7 +191,9 @@ const allProjects = [
     category: 'web',
     categoryLabel: 'Website',
     year: null,
-    cover: null,
+    // Illustrative mockup until a real screenshot is ready — replace /work/pulmonologist-clinic.jpg and drop this flag
+    cover: '/work/pulmonologist-clinic.jpg',
+    coverIsMockup: true,
     url: null,
     summary: 'A custom website for a pulmonologist in Indore, with its own design system and a signature “breathing” animation.',
     result: ph('result, e.g. what changed for the clinic'),
@@ -210,8 +212,8 @@ const allProjects = [
     category: 'web',
     categoryLabel: 'Website',
     year: null,
-    cover: null,
-    url: null,
+    cover: '/work/dental-clinic.jpg',
+    url: 'https://dental-sample-indore.vercel.app/',
     summary: 'A website for a dental clinic, and a reusable, demo-first template that lets any clinic see its own site before committing.',
     result: ph('result'),
     client: 'Dental clinic',
@@ -229,8 +231,8 @@ const allProjects = [
     category: 'web',
     categoryLabel: 'Conference website',
     year: '2026',
-    cover: null,
-    url: null,
+    cover: '/work/medical-conference.jpg',
+    url: 'https://icaaicon2026.com/',
     summary: 'The website for a national medical conference held in Indore in 2026.',
     result: ph('result, e.g. registrations through the site'),
     client: 'Medical conference organising committee, Indore',
@@ -247,7 +249,9 @@ const allProjects = [
     category: 'decks',
     categoryLabel: 'Corporate presentation',
     year: null,
-    cover: null,
+    // Illustrative mockup until a real screenshot is ready — replace /work/conference-pitch-deck.jpg and drop this flag
+    cover: '/work/conference-pitch-deck.jpg',
+    coverIsMockup: true,
     url: null,
     summary: 'A pitch deck for an events company, used to win conference business.',
     result: ph('result'),
@@ -265,7 +269,9 @@ const allProjects = [
     category: 'product',
     categoryLabel: 'Product · AI',
     year: null,
-    cover: null,
+    // Illustrative mockup until a real screenshot is ready — replace /work/cleanlabel-ai.jpg and drop this flag
+    cover: '/work/cleanlabel-ai.jpg',
+    coverIsMockup: true,
     url: null,
     summary: 'A food-label transparency tool: photograph a label and it reads the ingredients for you using Gemini Vision OCR.',
     result: ph('result or current status'),
@@ -285,7 +291,9 @@ const allProjects = [
     category: 'product',
     categoryLabel: 'Platform',
     year: null,
-    cover: null,
+    // Illustrative mockup until a real screenshot is ready — replace /work/evidence-portal.jpg and drop this flag
+    cover: '/work/evidence-portal.jpg',
+    coverIsMockup: true,
     url: null,
     summary: 'A research platform for AYUSH (traditional medicine) studies, with a built-in system for grading the strength of the evidence.',
     result: ph('result'),
@@ -359,6 +367,10 @@ const allProjects = [
 ]
 
 export const projects = allProjects.filter((p) => !p.hidden)
+
+// Mockups say so, so nobody mistakes them for the shipped site
+export const coverAlt = (p) =>
+  p.coverIsMockup ? `${p.title} — illustrative preview` : `${p.title} — full-page screenshot of the live site`
 
 export const process = [
   {

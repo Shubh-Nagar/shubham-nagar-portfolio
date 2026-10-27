@@ -5,6 +5,7 @@ import { engineering, services } from '../data/site'
 import SectionHeading from '../components/ui/SectionHeading'
 import { Stagger, StaggerItem } from '../components/ui/Stagger'
 import Reveal from '../components/ui/Reveal'
+import ServiceVisual from '../components/services/ServiceVisual'
 
 const icons = {
   web: MonitorSmartphone,
@@ -25,7 +26,8 @@ const ease = [0.16, 1, 0.3, 1]
 /**
  * Services as an expanding list rather than a grid of identical cards:
  * one row per service, click to open the detail. Each row leads with the
- * business outcome. Below: what the engineering background adds.
+ * business outcome; the open row adds a picture of the service.
+ * Below: what the engineering background adds.
  */
 export default function Services() {
   const [openId, setOpenId] = useState(services[0].id)
@@ -88,21 +90,24 @@ export default function Services() {
                       className="overflow-hidden"
                     >
                       <div className="grid gap-8 pb-10 md:grid-cols-[3.5rem_minmax(0,5fr)_minmax(0,4fr)_2.75rem] md:gap-8">
-                        <p className="text-ink-soft md:hidden">{service.short}</p>
                         <div className="md:col-start-2">
-                          <p className="max-w-xl text-lg leading-relaxed">{service.description}</p>
-                          <p className="mt-6 text-sm text-ink-soft">
+                          <p className="text-ink-soft md:hidden">{service.short}</p>
+                          <p className="mt-4 max-w-xl text-lg leading-relaxed md:mt-0">{service.description}</p>
+                          <ul className="mt-7 grid gap-3 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2">
+                            {service.deliverables.map((d) => (
+                              <li key={d} className="flex items-start gap-3">
+                                <Check className="mt-1 size-4 shrink-0 text-cobalt" aria-hidden="true" />
+                                <span>{d}</span>
+                              </li>
+                            ))}
+                          </ul>
+                          <p className="mt-7 text-sm text-ink-soft">
                             Typical timeline: <span className="text-ink">{service.timeline}</span>
                           </p>
                         </div>
-                        <ul className="space-y-3 md:col-start-3">
-                          {service.deliverables.map((d) => (
-                            <li key={d} className="flex items-start gap-3">
-                              <Check className="mt-1 size-4 shrink-0 text-cobalt" aria-hidden="true" />
-                              <span>{d}</span>
-                            </li>
-                          ))}
-                        </ul>
+                        <div className="md:col-span-2 md:col-start-3">
+                          <ServiceVisual id={service.id} />
+                        </div>
                       </div>
                     </motion.div>
                   )}

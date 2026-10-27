@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import { ArrowUpRight } from 'lucide-react'
-import { projects, workFilters } from '../data/site'
+import { coverAlt, projects, workFilters } from '../data/site'
 import SectionHeading from '../components/ui/SectionHeading'
 import Cover from '../components/ui/Cover'
 import Reveal from '../components/ui/Reveal'
@@ -103,9 +103,9 @@ function ProjectCard({ project, aspect }) {
       <div className="relative">
         <Cover
           src={project.cover}
-          alt={project.cover ? `${project.title} — project screenshot` : project.title}
+          alt={project.cover ? coverAlt(project) : project.title}
           className={`rounded-[24px] ${aspect}`}
-          imgClassName="group-hover:scale-[1.035]"
+          scroll
           reveal
           parallax={7}
           sizes="(min-width: 768px) 55vw, 100vw"
